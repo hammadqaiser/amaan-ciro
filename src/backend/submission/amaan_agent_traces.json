@@ -18298,5 +18298,1269 @@
     },
     "alternative_considered": "Template-based messages as fallback to LLM-generated",
     "fallback_triggered": true
+  },
+  {
+    "trace_id": "7667bce6-6737-4b63-943c-e8d18d8e1781",
+    "agent": "ChatAgent",
+    "timestamp": "2026-09-15T18:12:31.344546+00:00",
+    "input_data": {
+      "user_message": "Yar yahan G-10 mein paani bohat zyada hai, kya karoon?",
+      "language": "Roman Urdu",
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079
+      }
+    },
+    "reasoning_steps": [
+      "Language detected: Roman Urdu",
+      "Active crises in context: 0",
+      "Generated response via Gemini LLM"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "language": "Roman Urdu"
+    },
+    "alternative_considered": "Multilingual fallback responses",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "01fb6721-c26d-4528-abbc-93c0cd57e92b",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:12:33.823010+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079
+      },
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Applied -0.05 confidence penalty for resolved contradiction.",
+      "Classification performed using gemini_inference.",
+      "Classified as urban_flood with 0.77 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:12:33.822751+00:00",
+      "Contradiction: Dismissed stale water main report in favor of recent meteorological data.",
+      "LLM reasoning: Classified as flood due to high-credibility weather data."
+    ],
+    "confidence_score": 0.77,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": true
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "16062b0b-b21b-40c8-b664-59daaf12d4ee",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:12:34.352671+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "a15a7f77-14e7-4bae-9ed2-e686bcefde88",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:12:34.670327+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Applied -0.05 confidence penalty for resolved contradiction.",
+      "Classification performed using rule_based_fallback.",
+      "Classified as urban_flood with 0.65 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:12:34.670054+00:00",
+      "Contradiction: Signal from citizen_app (credibility 0.10, stale=True) contradicts flood classification. Dismissed due to low credibility/staleness.",
+      "LLM reasoning: Rule-based fallback: 2 flood signals detected with avg credibility 0.75"
+    ],
+    "confidence_score": 0.65,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": true
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "1900face-6116-4cc4-b13b-6b6d98ad0fe1",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-09-15T18:12:34.941926+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "weather_summary": {
+        "rainfall_mm": 60,
+        "temp_c": 30,
+        "rainfall_intensity_mm_per_hr": 20
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (60mm / 12mm/hr) \u00d7 1.3 = 6.5 hours",
+      "Spread risk = (20.0/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.2/\u03c0) = 1.16 km",
+      "Affected pop = \u03c0 \u00d7 1.16\u00b2 \u00d7 8500 \u00d7 0.85 = 30345",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 30345,
+      "estimated_duration_hours": 6.5,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "ffcda4d2-6ffe-439f-aa9c-55ccdfb18361",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-09-15T18:12:35.192648+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 809177c6-472e-4740-baf6-cf45209a2423: 3 \u00d7 30345 \u00d7 0.95 = 86483",
+      "Ranked crises: ['809177c6-472e-4740-baf6-cf45209a2423 (score=86483)']",
+      "Allocating for 809177c6-472e-4740-baf6-cf45209a2423 (urban_flood, severity 3): needs {'rescue_boats': 2, 'rescue_teams': 3, 'police_traffic_units': 2, 'ambulances': 2}",
+      "Total deployed: 9, Total cost: PKR 156,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 9,
+      "total_cost_pkr": 156000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "92c1352a-b78a-44b9-95d5-433990f68590",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-09-15T18:12:35.468916+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "population_at_risk": 30345,
+      "resources_deployed": 9
+    },
+    "reasoning_steps": [
+      "Before State: 30,345 at risk, 91 potential casualties",
+      "Used rule-based simulation (Gemini unavailable)",
+      "After State: 8,194 remain at risk",
+      "Response coverage: 1%",
+      "Lives protected: 60",
+      "Baseline comparison: 8min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 8.0,
+      "lives_protected": 60,
+      "response_coverage_pct": 0.73
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "28ebf590-0b4f-4251-8ca8-d500290a32b5",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-09-15T18:12:35.728713+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "severity": 3,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Used template-based fallback messages (Gemini unavailable)",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "09801ff3-2748-4686-9550-4b76583aef6a",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:12:35.974830+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "f187aff5-9348-4a21-9d44-87263828ae02",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:12:36.237650+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as urban_flood with 0.85 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:12:36.237446+00:00",
+      "LLM reasoning: Mocked for integration test"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "dba10182-177d-4ae7-a08b-2bcd9e578759",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-09-15T18:12:36.519586+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "weather_summary": {
+        "rainfall_mm": 82.0,
+        "rainfall_intensity_mm_per_hr": 27.33
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (82.0mm / 12mm/hr) \u00d7 1.3 = 8.9 hours",
+      "Spread risk = (27.3/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.0/\u03c0) = 1.13 km",
+      "Affected pop = \u03c0 \u00d7 1.13\u00b2 \u00d7 8500 \u00d7 0.85 = 28899",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 28899,
+      "estimated_duration_hours": 8.9,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "54c61484-f3dd-4f8d-a609-2165c3102558",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-09-15T18:12:36.794401+00:00",
+    "input_data": {
+      "crisis_count": 2,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for c-flood: 4 \u00d7 60000 \u00d7 0.80 = 192000 \u00d7 1.15 (low-income bonus) = 220800",
+      "Impact score for c-heat: 3 \u00d7 30000 \u00d7 0.30 = 27000",
+      "Ranked crises: ['c-flood (score=220800)', 'c-heat (score=27000)']",
+      "Allocating for c-flood (urban_flood, severity 4): needs {'rescue_boats': 4, 'rescue_teams': 4, 'police_traffic_units': 3, 'ambulances': 2}",
+      "Allocating for c-heat (heatwave, severity 3): needs {'medical_outreach_teams': 3, 'ambulances': 3, 'water_tankers': 2}",
+      "Total deployed: 21, Total cost: PKR 357,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 21,
+      "total_cost_pkr": 357000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 2
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "c4032c64-6db2-4009-8126-8444d007b97f",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:12:37.078314+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "34559284-e64d-4f7c-8ac0-cad7a6a4d11f",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:12:37.362454+00:00",
+    "input_data": {
+      "signal_count": 2,
+      "location": {},
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Classification performed using rule_based_fallback.",
+      "Classified as urban_flood with 0.85 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:12:37.362271+00:00",
+      "LLM reasoning: Rule-based fallback: 2 flood signals detected with avg credibility 0.85"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "1cc08550-5dd1-485f-9a10-4403d1c55a8f",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-09-15T18:12:37.640129+00:00",
+    "input_data": {
+      "crisis_count": 2,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 1: 4 \u00d7 10000 \u00d7 0.80 = 32000",
+      "Impact score for 2: 3 \u00d7 5000 \u00d7 0.50 = 7500",
+      "Ranked crises: ['1 (score=32000)', '2 (score=7500)']",
+      "Allocating for 1 (urban_flood, severity 4): needs {'rescue_boats': 4, 'rescue_teams': 4, 'police_traffic_units': 3, 'ambulances': 2}",
+      "Allocating for 2 (heatwave, severity 3): needs {'medical_outreach_teams': 3, 'ambulances': 3, 'water_tankers': 2}",
+      "Total deployed: 18, Total cost: PKR 312,000",
+      "Unmet needs: ['3x ambulances for 2 (requested 3, only 0 available)']"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 18,
+      "total_cost_pkr": 312000.0,
+      "unmet_needs_count": 1,
+      "crises_served": 2
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "ffe7b2e7-b186-4fd9-bbfc-986d47333999",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-09-15T18:12:37.964125+00:00",
+    "input_data": {
+      "crisis_id": "1",
+      "trigger_mode": "contradiction_detected",
+      "new_signal_count": 1
+    },
+    "reasoning_steps": [
+      "Verification triggered in contradiction_detected mode",
+      "Evaluating 1 new signals",
+      "Used rule-based verification (Gemini unavailable)",
+      "Crisis RETRACTED: Field verification (credibility 0.95) contradicts urban_flood classification. Projected confidence: 0.25 (below 0.35 threshold). Source: False alarm! It is just a water main burst, no rain or flood.",
+      "Reasoning: Field verification (credibility 0.95) contradicts urban_flood classification. Projected confidence: 0.25 (below 0.35 threshold). Source: False alarm! It is just a water main burst, no rain or flood."
+    ],
+    "confidence_score": 0.0,
+    "decision_made": {
+      "verdict": "retracted",
+      "confidence_delta": -0.4,
+      "retracted": true
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "327e0f7c-2f5f-4ecf-beb6-045bba6283d5",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-09-15T18:12:38.259038+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079
+      },
+      "weather_summary": {
+        "rainfall_mm": 82.0,
+        "rainfall_intensity_mm_per_hr": 27.33
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (82.0mm / 12mm/hr) \u00d7 1.3 = 8.9 hours",
+      "Spread risk = (27.3/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.0/\u03c0) = 1.13 km",
+      "Affected pop = \u03c0 \u00d7 1.13\u00b2 \u00d7 8500 \u00d7 0.85 = 28899",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 28899,
+      "estimated_duration_hours": 8.9,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "0a7056f5-09d9-4bf4-967a-6fdd7a9e5426",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:12:38.652875+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "b3d973d2-6506-4e64-9432-fcf85efa3185",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-09-15T18:12:38.946253+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "population_at_risk": 30000,
+      "resources_deployed": 0
+    },
+    "reasoning_steps": [
+      "Before State: 30,000 at risk, 90 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 5,000 remain at risk",
+      "Response coverage: 85%",
+      "Lives protected: 50",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 50,
+      "response_coverage_pct": 85.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "0707f681-e914-4ef4-8a88-9402fc097353",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-09-15T18:12:39.272691+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "severity": 4,
+      "audiences": [
+        "Public",
+        "Police",
+        "Rescue 1122",
+        "Hospitals",
+        "NDMA"
+      ]
+    },
+    "reasoning_steps": [
+      "Generated context-aware messages via Gemini LLM",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "Public",
+        "Police",
+        "Rescue 1122",
+        "Hospitals",
+        "NDMA"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "155fcf55-e6df-4b82-8412-b027ab2ab2f4",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-09-15T18:12:39.617151+00:00",
+    "input_data": {
+      "crisis_id": "1",
+      "trigger_mode": "manual",
+      "new_signal_count": 1
+    },
+    "reasoning_steps": [
+      "Verification triggered in manual mode",
+      "Evaluating 1 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis RETRACTED: New field report confirmed it is a burst water main, not an urban flood."
+    ],
+    "confidence_score": 0.0,
+    "decision_made": {
+      "verdict": "retracted",
+      "confidence_delta": -0.45,
+      "retracted": true
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "84dab43b-f1db-4705-802c-1c8dfa72d995",
+    "agent": "ChatAgent",
+    "timestamp": "2026-09-15T18:24:45.079331+00:00",
+    "input_data": {
+      "user_message": "Yar yahan G-10 mein paani bohat zyada hai, kya karoon?",
+      "language": "Roman Urdu",
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079
+      }
+    },
+    "reasoning_steps": [
+      "Language detected: Roman Urdu",
+      "Active crises in context: 0",
+      "Generated response via Gemini LLM"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "language": "Roman Urdu"
+    },
+    "alternative_considered": "Multilingual fallback responses",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "00fc3412-8756-4c89-8a20-14fe75933deb",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:24:46.923889+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079
+      },
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Applied -0.05 confidence penalty for resolved contradiction.",
+      "Classification performed using gemini_inference.",
+      "Classified as urban_flood with 0.77 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:24:46.923741+00:00",
+      "Contradiction: Dismissed stale water main report in favor of recent meteorological data.",
+      "LLM reasoning: Classified as flood due to high-credibility weather data."
+    ],
+    "confidence_score": 0.77,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": true
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "45531ed5-df56-4ce1-98f0-7338d61c7549",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:24:47.306558+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "5437216e-1426-4be8-86db-c0357e544645",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:24:48.096220+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Applied -0.05 confidence penalty for resolved contradiction.",
+      "Classification performed using rule_based_fallback.",
+      "Classified as urban_flood with 0.65 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:24:48.095955+00:00",
+      "Contradiction: Signal from citizen_app (credibility 0.10, stale=True) contradicts flood classification. Dismissed due to low credibility/staleness.",
+      "LLM reasoning: Rule-based fallback: 2 flood signals detected with avg credibility 0.75"
+    ],
+    "confidence_score": 0.65,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": true
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "a1ef3050-69b4-4c66-b382-03ed5a45d50e",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-09-15T18:24:48.760330+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "weather_summary": {
+        "rainfall_mm": 60,
+        "temp_c": 30,
+        "rainfall_intensity_mm_per_hr": 20
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (60mm / 12mm/hr) \u00d7 1.3 = 6.5 hours",
+      "Spread risk = (20.0/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.2/\u03c0) = 1.16 km",
+      "Affected pop = \u03c0 \u00d7 1.16\u00b2 \u00d7 8500 \u00d7 0.85 = 30345",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 30345,
+      "estimated_duration_hours": 6.5,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "df5b1610-da91-426d-9a32-6675777da522",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-09-15T18:24:49.572515+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 2f07ed1b-fad2-469d-8f9b-ef71025e99fa: 3 \u00d7 30345 \u00d7 0.95 = 86483",
+      "Ranked crises: ['2f07ed1b-fad2-469d-8f9b-ef71025e99fa (score=86483)']",
+      "Allocating for 2f07ed1b-fad2-469d-8f9b-ef71025e99fa (urban_flood, severity 3): needs {'rescue_boats': 2, 'rescue_teams': 3, 'police_traffic_units': 2, 'ambulances': 2}",
+      "Total deployed: 9, Total cost: PKR 156,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 9,
+      "total_cost_pkr": 156000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "6a47404e-edd2-4ef0-92c9-aa60a7c89036",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-09-15T18:24:50.538719+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "population_at_risk": 30345,
+      "resources_deployed": 9
+    },
+    "reasoning_steps": [
+      "Before State: 30,345 at risk, 91 potential casualties",
+      "Used rule-based simulation (Gemini unavailable)",
+      "After State: 8,194 remain at risk",
+      "Response coverage: 1%",
+      "Lives protected: 60",
+      "Baseline comparison: 8min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 8.0,
+      "lives_protected": 60,
+      "response_coverage_pct": 0.73
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "7e5d31c3-a69e-4927-b6a3-1fad2456e95b",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-09-15T18:24:51.243023+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "severity": 3,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Used template-based fallback messages (Gemini unavailable)",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "d8e7e207-9904-4eaa-b36a-a824529d51b3",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:24:51.827424+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "d7c1aa53-b3a8-4158-8791-72202f139dfd",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:24:52.608243+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as urban_flood with 0.85 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:24:52.608045+00:00",
+      "LLM reasoning: Mocked for integration test"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "b0a13f8a-65e4-43c8-bedd-a008aefae029",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-09-15T18:24:53.553495+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "weather_summary": {
+        "rainfall_mm": 82.0,
+        "rainfall_intensity_mm_per_hr": 27.33
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (82.0mm / 12mm/hr) \u00d7 1.3 = 8.9 hours",
+      "Spread risk = (27.3/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.0/\u03c0) = 1.13 km",
+      "Affected pop = \u03c0 \u00d7 1.13\u00b2 \u00d7 8500 \u00d7 0.85 = 28899",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 28899,
+      "estimated_duration_hours": 8.9,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "078672cb-0ede-4220-8501-378cb0815850",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-09-15T18:24:54.186671+00:00",
+    "input_data": {
+      "crisis_count": 2,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for c-flood: 4 \u00d7 60000 \u00d7 0.80 = 192000 \u00d7 1.15 (low-income bonus) = 220800",
+      "Impact score for c-heat: 3 \u00d7 30000 \u00d7 0.30 = 27000",
+      "Ranked crises: ['c-flood (score=220800)', 'c-heat (score=27000)']",
+      "Allocating for c-flood (urban_flood, severity 4): needs {'rescue_boats': 4, 'rescue_teams': 4, 'police_traffic_units': 3, 'ambulances': 2}",
+      "Allocating for c-heat (heatwave, severity 3): needs {'medical_outreach_teams': 3, 'ambulances': 3, 'water_tankers': 2}",
+      "Total deployed: 21, Total cost: PKR 357,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 21,
+      "total_cost_pkr": 357000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 2
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "4f022608-a9b7-477e-8ff8-95d6f6152c41",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:24:55.208059+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7,
+        "lng": 73.0,
+        "sector": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "83474dd4-52d2-4a73-a8d9-aab0238f280d",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-09-15T18:24:56.429138+00:00",
+    "input_data": {
+      "signal_count": 2,
+      "location": {},
+      "season": "Monsoon"
+    },
+    "reasoning_steps": [
+      "Classification performed using rule_based_fallback.",
+      "Classified as urban_flood with 0.85 confidence.",
+      "Season: Monsoon, Time: 2026-09-15T18:24:56.428970+00:00",
+      "LLM reasoning: Rule-based fallback: 2 flood signals detected with avg credibility 0.85"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "flash_flood",
+      "status": "active",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "4de69454-705e-41b5-84f6-ef8e29f4a135",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-09-15T18:24:57.169491+00:00",
+    "input_data": {
+      "crisis_count": 2,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 1: 4 \u00d7 10000 \u00d7 0.80 = 32000",
+      "Impact score for 2: 3 \u00d7 5000 \u00d7 0.50 = 7500",
+      "Ranked crises: ['1 (score=32000)', '2 (score=7500)']",
+      "Allocating for 1 (urban_flood, severity 4): needs {'rescue_boats': 4, 'rescue_teams': 4, 'police_traffic_units': 3, 'ambulances': 2}",
+      "Allocating for 2 (heatwave, severity 3): needs {'medical_outreach_teams': 3, 'ambulances': 3, 'water_tankers': 2}",
+      "Total deployed: 18, Total cost: PKR 312,000",
+      "Unmet needs: ['3x ambulances for 2 (requested 3, only 0 available)']"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 18,
+      "total_cost_pkr": 312000.0,
+      "unmet_needs_count": 1,
+      "crises_served": 2
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "a2c8313c-3a70-439a-908b-5966daca4303",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-09-15T18:24:58.322639+00:00",
+    "input_data": {
+      "crisis_id": "1",
+      "trigger_mode": "contradiction_detected",
+      "new_signal_count": 1
+    },
+    "reasoning_steps": [
+      "Verification triggered in contradiction_detected mode",
+      "Evaluating 1 new signals",
+      "Used rule-based verification (Gemini unavailable)",
+      "Crisis RETRACTED: Field verification (credibility 0.95) contradicts urban_flood classification. Projected confidence: 0.25 (below 0.35 threshold). Source: False alarm! It is just a water main burst, no rain or flood.",
+      "Reasoning: Field verification (credibility 0.95) contradicts urban_flood classification. Projected confidence: 0.25 (below 0.35 threshold). Source: False alarm! It is just a water main burst, no rain or flood."
+    ],
+    "confidence_score": 0.0,
+    "decision_made": {
+      "verdict": "retracted",
+      "confidence_delta": -0.4,
+      "retracted": true
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "eb7eb694-e913-4aa7-9663-6ea8505ed889",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-09-15T18:24:59.819897+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079
+      },
+      "weather_summary": {
+        "rainfall_mm": 82.0,
+        "rainfall_intensity_mm_per_hr": 27.33
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (82.0mm / 12mm/hr) \u00d7 1.3 = 8.9 hours",
+      "Spread risk = (27.3/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.0/\u03c0) = 1.13 km",
+      "Affected pop = \u03c0 \u00d7 1.13\u00b2 \u00d7 8500 \u00d7 0.85 = 28899",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 28899,
+      "estimated_duration_hours": 8.9,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "8c4c04bd-79fe-4138-9aca-036aa25a618f",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-09-15T18:25:01.499763+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.7047,
+        "lng": 73.0079,
+        "city": "Islamabad",
+        "address": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "DEMO_MODE is active. Loading fallback scenario A immediately.",
+      "Signal sig-004 (citizen_app) is 4.5hrs old. Staleness flag set, credibility 0.40 \u2192 0.10"
+    ],
+    "confidence_score": 0.79,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "mock"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "fallback": true
+    },
+    "alternative_considered": "DEMO_MODE bypass to demo_scenarios.json",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "a0920e0f-e387-4525-b254-1de060b9266d",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-09-15T18:25:02.255665+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "population_at_risk": 30000,
+      "resources_deployed": 0
+    },
+    "reasoning_steps": [
+      "Before State: 30,000 at risk, 90 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 5,000 remain at risk",
+      "Response coverage: 85%",
+      "Lives protected: 50",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 50,
+      "response_coverage_pct": 85.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "e5cabd37-1432-4388-8292-5cce04f5c47f",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-09-15T18:25:03.166326+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "severity": 4,
+      "audiences": [
+        "Public",
+        "Police",
+        "Rescue 1122",
+        "Hospitals",
+        "NDMA"
+      ]
+    },
+    "reasoning_steps": [
+      "Generated context-aware messages via Gemini LLM",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "Public",
+        "Police",
+        "Rescue 1122",
+        "Hospitals",
+        "NDMA"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "4ee6a6c8-76fa-4afe-a517-45864113d45a",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-09-15T18:25:03.923701+00:00",
+    "input_data": {
+      "crisis_id": "1",
+      "trigger_mode": "manual",
+      "new_signal_count": 1
+    },
+    "reasoning_steps": [
+      "Verification triggered in manual mode",
+      "Evaluating 1 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis RETRACTED: New field report confirmed it is a burst water main, not an urban flood."
+    ],
+    "confidence_score": 0.0,
+    "decision_made": {
+      "verdict": "retracted",
+      "confidence_delta": -0.45,
+      "retracted": true
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
   }
 ]

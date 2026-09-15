@@ -6,8 +6,18 @@ Every agent inherits this — never duplicate these methods.
 
 import os
 import json
+import re
 from datetime import datetime, timezone
-from groq import Groq
+
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
+
+try:
+    from groq import Groq
+except ImportError:
+    Groq = None
 
 # Data directory path — works both locally and in Docker
 def _find_dir(name: str) -> str:
@@ -30,20 +40,43 @@ SUBMISSION_DIR = _find_dir("submission")
 class BaseAgent:
     """
     Base class for all Amaan agents.
-    Provides Groq client, Firestore logging, and trace generation.
+    Supports Vercel AI Gateway (default), Groq, and Gemini with Firestore logging and trace generation.
     """
 
     def __init__(self, agent_name: str):
         self.agent_name = agent_name
-        # Using Llama 3.3 70B — Groq's most powerful and fastest model
-        self.model_name = "llama-3.3-70b-versatile"
+        self.client = None
+        self.provider = "fallback"
+        self.model_name = "rule_based_fallback"
 
-        # Create Groq Client
-        api_key = os.environ.get("GROQ_API_KEY")
-        if api_key:
-            self.client = Groq(api_key=api_key)
-        else:
-            self.client = None
+        # 1. Primary: Vercel AI Gateway (OpenAI-compatible)
+        gateway_key = os.environ.get("AI_GATEWAY_API_KEY") or os.environ.get("VERCEL_AI_GATEWAY_KEY")
+        if gateway_key and OpenAI:
+            self.provider = "vercel_ai_gateway"
+            base_url = os.environ.get("AI_GATEWAY_BASE_URL", "https://ai-gateway.vercel.sh/v1")
+            # Default to google/gemini-2.0-flash (fast, JSON-native, hackathon aligned)
+            # Can also be meta-llama/llama-3.3-70b-instruct or deepseek/deepseek-chat
+            self.model_name = os.environ.get("AI_GATEWAY_MODEL", "google/gemini-2.0-flash")
+            self.client = OpenAI(api_key=gateway_key, base_url=base_url)
+            self.base_url = base_url
+
+        # 2. Fallback: Groq (if Groq API key is present and Gateway key is not)
+        elif os.environ.get("GROQ_API_KEY") and Groq:
+            self.provider = "groq"
+            self.model_name = "llama-3.3-70b-versatile"
+            self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+        # 3. Fallback: Direct Gemini API (if Gemini key is present)
+        elif os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"):
+            try:
+                from google import genai
+                self.provider = "gemini"
+                self.model_name = "gemini-2.0-flash"
+                gemini_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+                self.client = genai.Client(api_key=gemini_key)
+            except Exception:
+                self.client = None
+                self.provider = "fallback"
 
         self.db = None
         try:
@@ -62,31 +95,54 @@ class BaseAgent:
 
     def call_gemini(self, prompt: str, fallback: dict) -> tuple[dict, bool]:
         """
-        Call Groq API (Kept the name 'call_gemini' so other agent files don't break).
+        Call the configured AI Gateway / LLM provider.
         Returns parsed JSON dict + fallback_triggered boolean.
+        On any failure or missing configuration, returns fallback dict with fallback_triggered=True.
         """
         if not self.client:
-            print(f"[{self.agent_name}] No GROQ_API_KEY configured. Using fallback.")
+            print(f"[{self.agent_name}] No AI Gateway or LLM key configured. Using fallback.")
             return fallback, True
 
-        # Groq's JSON mode strictly requires the word "JSON" in the prompt
+        # JSON mode requirement
         if "json" not in prompt.lower():
             prompt += "\n\nYou MUST return your response entirely in valid JSON format."
 
         try:
-            response = self.client.chat.completions.create(
-                messages=[{"role": "user", "content": prompt}],
-                model=self.model_name,
-                response_format={"type": "json_object"},
-                temperature=0.2, # Low temp for deterministic JSON
-                timeout=30.0,
-            )
-            
-            response_text = response.choices[0].message.content
-            return json.loads(response_text), False
-            
+            if self.provider in ("vercel_ai_gateway", "groq"):
+                response = self.client.chat.completions.create(
+                    messages=[{"role": "user", "content": prompt}],
+                    model=self.model_name,
+                    response_format={"type": "json_object"},
+                    temperature=0.2, # Low temp for deterministic JSON
+                    timeout=30.0,
+                )
+                response_text = response.choices[0].message.content or "{}"
+
+            elif self.provider == "gemini":
+                from google.genai import types
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.2,
+                    )
+                )
+                response_text = response.text or "{}"
+
+            else:
+                return fallback, True
+
+            # Clean markdown JSON wraps if present
+            cleaned_text = response_text.strip()
+            if cleaned_text.startswith("```"):
+                cleaned_text = re.sub(r"^```(?:json)?\s*", "", cleaned_text)
+                cleaned_text = re.sub(r"\s*```$", "", cleaned_text)
+
+            return json.loads(cleaned_text), False
+
         except Exception as e:
-            print(f"[{self.agent_name}] Groq failed: {e}. Using fallback.")
+            print(f"[{self.agent_name}] {self.provider} ({self.model_name}) failed: {e}. Using fallback.")
             return fallback, True
 
     def log_trace(

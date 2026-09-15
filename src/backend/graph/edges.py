@@ -63,11 +63,12 @@ class CIROEdges:
 
     def _llm_route_classification(self, state: CrisisState) -> str:
         """
-        Use Groq (preferred) or Gemini to decide next step (production mode).
+        Use Vercel AI Gateway (preferred), Groq, or Gemini to decide next step (production mode).
         Falls back to deterministic if LLM fails.
         """
         try:
             crisis = state.get("crisis_object", {})
+            gateway_key = os.environ.get("AI_GATEWAY_API_KEY") or os.environ.get("VERCEL_AI_GATEWAY_KEY")
             groq_key = os.environ.get("GROQ_API_KEY")
             gemini_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
 
@@ -88,7 +89,20 @@ Rules:
 Return ONLY this JSON: {{"next_node": "string"}}"""
 
             response_text = ""
-            if groq_key:
+            if gateway_key:
+                from openai import OpenAI
+                base_url = os.environ.get("AI_GATEWAY_BASE_URL", "https://ai-gateway.vercel.sh/v1")
+                model_name = os.environ.get("AI_GATEWAY_MODEL", "google/gemini-2.0-flash")
+                client = OpenAI(api_key=gateway_key, base_url=base_url)
+                response = client.chat.completions.create(
+                    messages=[{"role": "user", "content": prompt}],
+                    model=model_name,
+                    response_format={"type": "json_object"},
+                    temperature=0.1,
+                    timeout=5.0,
+                )
+                response_text = response.choices[0].message.content or ""
+            elif groq_key:
                 from groq import Groq
                 client = Groq(api_key=groq_key)
                 response = client.chat.completions.create(
@@ -98,7 +112,7 @@ Return ONLY this JSON: {{"next_node": "string"}}"""
                     temperature=0.1,
                     timeout=5.0,
                 )
-                response_text = response.choices[0].message.content
+                response_text = response.choices[0].message.content or ""
             elif gemini_key:
                 client = genai.Client(api_key=gemini_key)
                 response = client.models.generate_content(
@@ -109,7 +123,7 @@ Return ONLY this JSON: {{"next_node": "string"}}"""
                         http_options=types.HttpOptions(timeout=5_000),
                     ),
                 )
-                response_text = response.text
+                response_text = response.text or ""
             else:
                 return self._deterministic_route_classification(state)
 
