@@ -5,7 +5,7 @@ import axios from 'axios'
 // The localStorage override ('ciro_server_url') allows dynamic swapping
 // from the mobile Settings tab without rebuilding the APK.
 
-const PRODUCTION_URL = 'https://amaan-ciro-485623882730.asia-south1.run.app/api';
+const PRODUCTION_URL = 'https://amaan-ciro.onrender.com/';
 
 const getBaseURL = () => {
   // 1. User-configured override (from Settings tab on mobile)
