@@ -5,21 +5,29 @@ import axios from 'axios'
 // The localStorage override ('ciro_server_url') allows dynamic swapping
 // from the mobile Settings tab without rebuilding the APK.
 
-const PRODUCTION_URL = 'https://amaan-ciro.onrender.com/';
+const PRODUCTION_URL = 'https://amaan-ciro.onrender.com/api';
+
+const normalizeApiUrl = (url: string): string => {
+  let cleaned = url.trim().replace(/\/+$/, '');
+  if (!cleaned.endsWith('/api')) {
+    cleaned += '/api';
+  }
+  return cleaned;
+};
 
 const getBaseURL = () => {
   // 1. User-configured override (from Settings tab on mobile)
   if (typeof window !== 'undefined') {
     const savedUrl = localStorage.getItem('ciro_server_url');
     if (savedUrl && savedUrl.trim() !== '') {
-      return savedUrl;
+      return normalizeApiUrl(savedUrl);
     }
   }
   // 2. Build-time env variable (for local dev or staging)
   if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
+    return normalizeApiUrl(import.meta.env.VITE_API_BASE_URL);
   }
-  // 3. Default: Live Cloud Run production server
+  // 3. Default: Live Render production server
   return PRODUCTION_URL;
 };
 
@@ -38,7 +46,7 @@ apiClient.interceptors.request.use(
     if (typeof window !== 'undefined') {
       const savedUrl = localStorage.getItem('ciro_server_url');
       if (savedUrl && savedUrl.trim() !== '') {
-        config.baseURL = savedUrl;
+        config.baseURL = normalizeApiUrl(savedUrl);
       }
     }
     // Strip leading slash so Axios joins relative to baseURL subpath (/api)

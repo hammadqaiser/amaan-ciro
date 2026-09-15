@@ -109,13 +109,22 @@ class BaseAgent:
 
         try:
             if self.provider in ("vercel_ai_gateway", "groq"):
-                response = self.client.chat.completions.create(
-                    messages=[{"role": "user", "content": prompt}],
-                    model=self.model_name,
-                    response_format={"type": "json_object"},
-                    temperature=0.2, # Low temp for deterministic JSON
-                    timeout=30.0,
-                )
+                try:
+                    response = self.client.chat.completions.create(
+                        messages=[{"role": "user", "content": prompt}],
+                        model=self.model_name,
+                        response_format={"type": "json_object"},
+                        temperature=0.2, # Low temp for deterministic JSON
+                        timeout=30.0,
+                    )
+                except Exception as rf_err:
+                    # Some gateway models or providers don't support response_format parameter
+                    response = self.client.chat.completions.create(
+                        messages=[{"role": "user", "content": prompt}],
+                        model=self.model_name,
+                        temperature=0.2,
+                        timeout=30.0,
+                    )
                 response_text = response.choices[0].message.content or "{}"
 
             elif self.provider == "gemini":
