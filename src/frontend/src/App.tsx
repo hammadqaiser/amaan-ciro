@@ -8,11 +8,9 @@ import ArchEnginePanel from './components/layout/ArchEnginePanel'
 import ArchMapPanel from './components/layout/ArchMapPanel'
 import ArchChatPanel from './components/layout/ArchChatPanel'
 import ArchLayoutPanel from './components/layout/ArchLayoutPanel'
-import NewsIframe from './components/layout/NewsIframe'
 import ResourcePanel from './components/layout/ResourcePanel'
 import SimulationPanel from './components/layout/SimulationPanel'
 import AlertsPanel from './components/layout/AlertsPanel'
-import StreamDockPanel from './components/layout/StreamDockPanel'
 import LiveStatusTicker from './components/layout/LiveStatusTicker'
 import { useCiroStore } from './store/useCiroStore'
 import {
@@ -82,8 +80,8 @@ function MobileTimeTicker() {
 }
 
 function App() {
-  const { newsFeeds, triggerPipelineRun, isLoading, allAlerts, agentStatus } = useCiroStore()
-  const [activeTab, setActiveTab] = useState<'overview' | 'map' | 'broadcasts' | 'alerts' | 'operations' | 'settings'>('overview')
+  const { triggerPipelineRun, isLoading, allAlerts, agentStatus } = useCiroStore()
+  const [activeTab, setActiveTab] = useState<'overview' | 'map' | 'alerts' | 'operations' | 'settings'>('overview')
 
   // Responsive Layout States
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false)
@@ -323,16 +321,6 @@ function App() {
                 </div>
               </div>
 
-              {/* Geo Live News Feed */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 px-1">
-                  <span className="w-1.5 h-3.5 bg-red-500 rounded-sm"></span>
-                  <h3 className="text-[10.5px] uppercase font-bold text-gray-200 tracking-wider">📺 Geo Live News Feed</h3>
-                </div>
-                <div className="h-56 w-full relative border border-[#1f1f1f] rounded overflow-hidden shadow-lg bg-[#070707]">
-                  <NewsIframe index={0} title="Geo Live Feed" />
-                </div>
-              </div>
 
               {/* Dynamic Telemetry & Available Resources Status */}
               <div className="bg-[#070707] border border-[#1f1f1f] rounded-lg p-4 shadow-md font-mono relative overflow-hidden">
@@ -485,16 +473,6 @@ function App() {
           {mobileTab === 'alerts' && (
             <div className="w-full h-full overflow-y-auto px-4 py-4 space-y-5 custom-scrollbar pb-24 bg-[#020202]">
 
-              {/* News ticker */}
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 px-1">
-                  <span className="w-1.5 h-3 bg-red-500 rounded-sm"></span>
-                  <h2 className="text-[10px] uppercase font-bold text-gray-300 tracking-widest font-mono">Geo News Live Feed</h2>
-                </div>
-                <div className="h-[200px] w-full rounded overflow-hidden">
-                  <NewsIframe index={0} title="Geo Live feed" />
-                </div>
-              </div>
 
               {/* Signals */}
               <div className="flex flex-col gap-2">
@@ -802,7 +780,6 @@ function App() {
           >
             <option value="overview">🧬 System Overview</option>
             <option value="map">🗺️ Operations Map</option>
-            <option value="broadcasts">📺 Broadcast Links</option>
             <option value="alerts">🚨 Stakeholder Logs</option>
             <option value="operations">🛡️ Resource Allocation</option>
             <option value="settings">⚙️ System Linkage</option>
@@ -830,17 +807,6 @@ function App() {
           >
             <MapIcon className="w-3.5 h-3.5" />
             Map View
-          </button>
-
-          <button
-            onClick={() => setActiveTab('broadcasts')}
-            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'broadcasts'
-                ? 'bg-red-500/10 text-red-400 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.15)]'
-                : 'bg-[#0c0c0c] text-gray-500 border-[#222] hover:text-gray-300 hover:border-[#333]'
-              }`}
-          >
-            <Radio className="w-3.5 h-3.5" />
-            Broadcasts ({newsFeeds.length})
           </button>
 
           <button
@@ -962,25 +928,6 @@ function App() {
               </span>
             </div>
 
-            {/* ROW 3: Satellite Broadcast News Live Feed */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 px-1">
-                <span className="w-1.5 h-4.5 bg-red-500 rounded-sm"></span>
-                <h3 className="text-xs uppercase font-bold text-gray-200 tracking-wider">📺 Satellite Broadcast News Live Feed</h3>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                <div className="col-span-1 min-h-[300px]">
-                  <NewsIframe index={0} title="GEO NEWS LIVE SATELLITE FEED" />
-                </div>
-                <div className="col-span-1 min-h-[300px]">
-                  <NewsIframe index={1} title="ARY NEWS LIVE SATELLITE FEED" />
-                </div>
-                <div className="col-span-1 min-h-[300px]">
-                  <StreamDockPanel />
-                </div>
-              </div>
-            </div>
 
             {/* ROW 4: Run System Scenarios Controls */}
             <div className="space-y-4 bg-[#070707] border border-[#1f1f1f] rounded-lg p-8 shadow-xl w-full">
@@ -1253,39 +1200,6 @@ function App() {
           </div>
         )}
 
-        {/* TAB 3: BROADCAST & NEWS LIVE DECK */}
-        {activeTab === 'broadcasts' && (
-          <div className="flex flex-col gap-3 animate-fade-in-up">
-            <div className="flex items-center gap-2 px-1">
-              <span className="w-1.5 h-3 bg-red-500 rounded-sm"></span>
-              <h2 className="text-xs uppercase font-bold text-gray-300 tracking-widest font-mono">Satellite News & Broadcast Linkage Deck</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {newsFeeds[0] && (
-                <div className="col-span-1 min-h-[300px]">
-                  <NewsIframe index={0} title="GEO NEWS LIVE SATELLITE FEED" />
-                </div>
-              )}
-
-              {newsFeeds[1] && (
-                <div className="col-span-1 min-h-[300px]">
-                  <NewsIframe index={1} title="ARY NEWS LIVE SATELLITE FEED" />
-                </div>
-              )}
-
-              {newsFeeds.slice(2).map((_, idx) => (
-                <div key={idx} className="col-span-1 min-h-[300px]">
-                  <NewsIframe index={idx + 2} title={`CUSTOM BROADCAST VECTOR LINK #${idx + 1}`} />
-                </div>
-              ))}
-
-              <div className="col-span-1 min-h-[300px]">
-                <StreamDockPanel />
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* TAB 4: STAKEHOLDER EMERGENCY MONITORS */}
         {activeTab === 'alerts' && (
