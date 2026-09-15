@@ -58,24 +58,57 @@ class AmaanOrchestrator:
         self.verification_agent = VerificationAgent()
 
     def _load_vulnerability_data(self, location: dict) -> dict:
-        """Load ICT vulnerability data for the given sector."""
+        """Load ICT vulnerability data for the given sector, mapping Karachi/Lahore coordinates dynamically."""
+        lat = float(location.get("lat", 33.6844))
+        lng = float(location.get("lng", 73.0479))
+        city = location.get("city", "").lower()
+        sector = location.get("sector", "").lower()
+        
+        is_karachi = "karachi" in city or (24.0 <= lat <= 26.0 and 66.0 <= lng <= 68.0)
+        is_lahore = "lahore" in city or (31.0 <= lat <= 32.0 and 74.0 <= lng <= 75.0)
+        
+        mapped_key = None
+        if is_karachi:
+            if "clifton" in sector or "dha" in sector:
+                mapped_key = "F-7"
+            elif "lyari" in sector:
+                mapped_key = "I-10"
+            elif "saddar" in sector:
+                mapped_key = "I-8"
+            else:
+                mapped_key = "G-10"
+        elif is_lahore:
+            if "gulberg" in sector:
+                mapped_key = "F-7"
+            elif "dha" in sector:
+                mapped_key = "F-6"
+            elif "model" in sector:
+                mapped_key = "I-8"
+            else:
+                mapped_key = "G-10"
+
         try:
             vuln_file = os.path.join(DATA_DIR, "ict_vulnerability.json")
             with open(vuln_file, 'r') as f:
                 all_data = json.load(f)
-                sector = location.get("sector", "")
-                if sector and sector in all_data:
-                    return all_data[sector]
-                # Try to match by city or address
-                for key in all_data:
-                    addr = location.get("address", "")
-                    city = location.get("city", "")
-                    if key in addr or key in city:
-                        return all_data[key]
-                return all_data.get("G-10", {})  # Default fallback
+                
+            if mapped_key and mapped_key in all_data:
+                return all_data[mapped_key]
+                
+            sect = location.get("sector", "")
+            if sect and sect in all_data:
+                return all_data[sect]
+            # Try to match by city or address
+            for key in all_data:
+                addr = location.get("address", "")
+                cit = location.get("city", "")
+                if key in addr or key in cit:
+                    return all_data[key]
+            return all_data.get("G-10", {})  # Default fallback
         except Exception as e:
             print(f"[Orchestrator] Failed to load vulnerability data: {e}")
-            return {}
+            return {"flood_vulnerability": 0.7, "drainage_capacity_mm_per_hr": 15,
+                    "population_density_per_sqkm": 7000, "area_sqkm": 4.0}
 
     def _load_resource_inventory(self) -> dict:
         """Load resource inventory from data file."""

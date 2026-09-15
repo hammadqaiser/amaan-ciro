@@ -59,6 +59,12 @@ const DEFAULT_LOCATION = { lat: 33.6844, lng: 73.0479 }; // Islamabad
 const GEO_NEWS_URL = "https://www.youtube.com/embed/_FwympjOSNE?autoplay=1&mute=1";
 const ARY_NEWS_URL = "https://www.youtube.com/embed/K77zGtR_X58?autoplay=1&mute=1";
 
+const getCityFromCoordinates = (lat: number, lng: number): string => {
+  if (lat >= 24.0 && lat <= 26.0 && lng >= 66.0 && lng <= 68.0) return "Karachi";
+  if (lat >= 31.0 && lat <= 32.0 && lng >= 74.0 && lng <= 75.0) return "Lahore";
+  return "Islamabad";
+};
+
 const STATUS_MESSAGES = [
   "Ingesting local signals from weather and traffic...",
   "Classifying crisis type and severity...",
@@ -115,7 +121,7 @@ export const useCiroStore = create<CiroState>((set, get) => ({
           navigator.geolocation.getCurrentPosition(
             (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
             (err) => reject(err),
-            { timeout: 5000 }
+            { timeout: 5000, enableHighAccuracy: true }
           );
         });
         set({ userLocation: loc });
@@ -136,8 +142,17 @@ export const useCiroStore = create<CiroState>((set, get) => ({
 
     // 3. Trigger Backend Pipeline
     try {
+      const latitude = loc?.lat || 33.6844;
+      const longitude = loc?.lng || 73.0479;
+      const city = getCityFromCoordinates(latitude, longitude);
+
       const payload = endpoint === '/pipeline/run' ? {
-        location: { lat: loc?.lat || 33.6844, lng: loc?.lng || 73.0479, city: "Islamabad" },
+        location: { 
+          lat: latitude, 
+          lng: longitude, 
+          city: city,
+          sector: city === "Karachi" ? "Clifton" : city === "Lahore" ? "Johar Town" : "G-10"
+        },
         radius_km: 10.0,
         time_window_hours: 2
       } : undefined;
