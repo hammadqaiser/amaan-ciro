@@ -1,23 +1,22 @@
-"""
-BaseAgent — Foundation class for all 8 Amaan agents.
-Provides Groq client (replacing Gemini for dev), Firestore logging, and trace generation.
-Every agent inherits this — never duplicate these methods.
-"""
-
 import os
 import json
 import re
+import time
+import concurrent.futures
 from datetime import datetime, timezone
-
-try:
-    from openai import OpenAI
-except ImportError:
-    OpenAI = None
 
 try:
     from groq import Groq
 except ImportError:
     Groq = None
+
+# Free, fast models active on Groq LPUs
+GROQ_MODELS = [
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "groq/compound-mini",
+    "qwen/qwen3.8-27b"
+]
 
 # Data directory path — works both locally and in Docker
 def _find_dir(name: str) -> str:
@@ -40,43 +39,27 @@ SUBMISSION_DIR = _find_dir("submission")
 class BaseAgent:
     """
     Base class for all Amaan agents.
-    Supports Vercel AI Gateway (default), Groq, and Gemini with Firestore logging and trace generation.
+    Exclusively uses Groq LPUs with multi-model parallel racing across free models:
+    - openai/gpt-oss-120b
+    - openai/gpt-oss-20b
+    - groq/compound-mini
+    - qwen/qwen3.8-27b
     """
 
     def __init__(self, agent_name: str):
         self.agent_name = agent_name
         self.client = None
         self.provider = "fallback"
-        self.model_name = "rule_based_fallback"
+        self.model_name = "groq-parallel-pool"
+        self.active_models = GROQ_MODELS
 
-        # 1. Primary: Vercel AI Gateway (OpenAI-compatible)
-        gateway_key = os.environ.get("AI_GATEWAY_API_KEY") or os.environ.get("VERCEL_AI_GATEWAY_KEY")
-        if gateway_key and OpenAI:
-            self.provider = "vercel_ai_gateway"
-            base_url = os.environ.get("AI_GATEWAY_BASE_URL", "https://ai-gateway.vercel.sh/v1")
-            # Default to google/gemini-2.0-flash (fast, JSON-native, hackathon aligned)
-            # Can also be meta-llama/llama-3.3-70b-instruct or deepseek/deepseek-chat
-            self.model_name = os.environ.get("AI_GATEWAY_MODEL", "google/gemini-2.0-flash")
-            self.client = OpenAI(api_key=gateway_key, base_url=base_url)
-            self.base_url = base_url
-
-        # 2. Fallback: Groq (if Groq API key is present and Gateway key is not)
-        elif os.environ.get("GROQ_API_KEY") and Groq:
+        api_key = os.environ.get("GROQ_API_KEY")
+        if api_key and Groq:
             self.provider = "groq"
-            self.model_name = "llama-3.3-70b-versatile"
-            self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-
-        # 3. Fallback: Direct Gemini API (if Gemini key is present)
-        elif os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"):
-            try:
-                from google import genai
-                self.provider = "gemini"
-                self.model_name = "gemini-2.0-flash"
-                gemini_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-                self.client = genai.Client(api_key=gemini_key)
-            except Exception:
-                self.client = None
-                self.provider = "fallback"
+            self.client = Groq(api_key=api_key)
+            custom_models = os.environ.get("GROQ_MODELS")
+            if custom_models:
+                self.active_models = [m.strip() for m in custom_models.split(",") if m.strip()]
 
         self.db = None
         try:
@@ -93,65 +76,64 @@ class BaseAgent:
                 # Firestore unavailable — use file-based trace persistence
                 self.db = None
 
+    def _query_model(self, model: str, prompt: str) -> dict:
+        """Helper to query a single Groq model and return parsed JSON."""
+        response = self.client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model=model,
+            max_tokens=600,
+            temperature=0.2,
+            timeout=10.0,
+        )
+        response_text = response.choices[0].message.content or "{}"
+        
+        # Clean markdown code blocks if wrapped
+        cleaned_text = response_text.strip()
+        if cleaned_text.startswith("```"):
+            cleaned_text = re.sub(r"^```(?:json)?\s*", "", cleaned_text)
+            cleaned_text = re.sub(r"\s*```$", "", cleaned_text)
+            
+        return json.loads(cleaned_text)
+
     def call_gemini(self, prompt: str, fallback: dict) -> tuple[dict, bool]:
         """
-        Call the configured AI Gateway / LLM provider.
-        Returns parsed JSON dict + fallback_triggered boolean.
-        On any failure or missing configuration, returns fallback dict with fallback_triggered=True.
+        Call Groq using parallel multi-model racing.
+        Sends prompt to 3-4 models simultaneously and returns the FIRST valid parsed response.
+        If all models fail or rate-limit, returns fallback dict.
         """
         if not self.client:
-            print(f"[{self.agent_name}] No AI Gateway or LLM key configured. Using fallback.")
+            print(f"[{self.agent_name}] No GROQ_API_KEY configured. Using fallback.")
             return fallback, True
 
-        # JSON mode requirement
+        # Ensure JSON instruction
         if "json" not in prompt.lower():
             prompt += "\n\nYou MUST return your response entirely in valid JSON format."
 
+        t0 = time.time()
         try:
-            if self.provider in ("vercel_ai_gateway", "groq"):
-                try:
-                    response = self.client.chat.completions.create(
-                        messages=[{"role": "user", "content": prompt}],
-                        model=self.model_name,
-                        response_format={"type": "json_object"},
-                        temperature=0.2, # Low temp for deterministic JSON
-                        timeout=30.0,
-                    )
-                except Exception as rf_err:
-                    # Some gateway models or providers don't support response_format parameter
-                    response = self.client.chat.completions.create(
-                        messages=[{"role": "user", "content": prompt}],
-                        model=self.model_name,
-                        temperature=0.2,
-                        timeout=30.0,
-                    )
-                response_text = response.choices[0].message.content or "{}"
+            # Query models in parallel, return the first successful valid response
+            with concurrent.futures.ThreadPoolExecutor(max_workers=len(self.active_models)) as executor:
+                future_to_model = {
+                    executor.submit(self._query_model, model, prompt): model
+                    for model in self.active_models
+                }
 
-            elif self.provider == "gemini":
-                from google.genai import types
-                response = self.client.models.generate_content(
-                    model=self.model_name,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        temperature=0.2,
-                    )
-                )
-                response_text = response.text or "{}"
+                for future in concurrent.futures.as_completed(future_to_model):
+                    model = future_to_model[future]
+                    try:
+                        parsed_json = future.result()
+                        elapsed = round(time.time() - t0, 2)
+                        print(f"[{self.agent_name}] Groq parallel winner: {model} ({elapsed}s)")
+                        self.model_name = model
+                        return parsed_json, False
+                    except Exception as e:
+                        print(f"[{self.agent_name}] Groq model {model} attempt failed: {e}. Trying other parallel candidates...")
 
-            else:
-                return fallback, True
-
-            # Clean markdown JSON wraps if present
-            cleaned_text = response_text.strip()
-            if cleaned_text.startswith("```"):
-                cleaned_text = re.sub(r"^```(?:json)?\s*", "", cleaned_text)
-                cleaned_text = re.sub(r"\s*```$", "", cleaned_text)
-
-            return json.loads(cleaned_text), False
+            print(f"[{self.agent_name}] All Groq candidate models failed. Using fallback.")
+            return fallback, True
 
         except Exception as e:
-            print(f"[{self.agent_name}] {self.provider} ({self.model_name}) failed: {e}. Using fallback.")
+            print(f"[{self.agent_name}] Groq parallel dispatch failed: {e}. Using fallback.")
             return fallback, True
 
     def log_trace(

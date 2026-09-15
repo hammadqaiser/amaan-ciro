@@ -63,14 +63,12 @@ class CIROEdges:
 
     def _llm_route_classification(self, state: CrisisState) -> str:
         """
-        Use Vercel AI Gateway (preferred), Groq, or Gemini to decide next step (production mode).
+        Use Groq LPUs to decide next step (production mode).
         Falls back to deterministic if LLM fails.
         """
         try:
             crisis = state.get("crisis_object", {})
-            gateway_key = os.environ.get("AI_GATEWAY_API_KEY") or os.environ.get("VERCEL_AI_GATEWAY_KEY")
             groq_key = os.environ.get("GROQ_API_KEY")
-            gemini_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
 
             prompt = f"""You are a crisis routing supervisor. Given this classification output,
 decide the next step in the pipeline.
@@ -89,41 +87,23 @@ Rules:
 Return ONLY this JSON: {{"next_node": "string"}}"""
 
             response_text = ""
-            if gateway_key:
-                from openai import OpenAI
-                base_url = os.environ.get("AI_GATEWAY_BASE_URL", "https://ai-gateway.vercel.sh/v1")
-                model_name = os.environ.get("AI_GATEWAY_MODEL", "google/gemini-2.0-flash")
-                client = OpenAI(api_key=gateway_key, base_url=base_url)
-                response = client.chat.completions.create(
-                    messages=[{"role": "user", "content": prompt}],
-                    model=model_name,
-                    response_format={"type": "json_object"},
-                    temperature=0.1,
-                    timeout=5.0,
-                )
-                response_text = response.choices[0].message.content or ""
-            elif groq_key:
+            if groq_key:
                 from groq import Groq
                 client = Groq(api_key=groq_key)
-                response = client.chat.completions.create(
-                    messages=[{"role": "user", "content": prompt}],
-                    model="llama-3.3-70b-versatile",
-                    response_format={"type": "json_object"},
-                    temperature=0.1,
-                    timeout=5.0,
-                )
-                response_text = response.choices[0].message.content or ""
-            elif gemini_key:
-                client = genai.Client(api_key=gemini_key)
-                response = client.models.generate_content(
-                    model="gemini-2.0-flash",
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        http_options=types.HttpOptions(timeout=5_000),
-                    ),
-                )
-                response_text = response.text or ""
+                for model in ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "groq/compound-mini"]:
+                    try:
+                        response = client.chat.completions.create(
+                            messages=[{"role": "user", "content": prompt}],
+                            model=model,
+                            max_tokens=200,
+                            temperature=0.1,
+                            timeout=5.0,
+                        )
+                        response_text = response.choices[0].message.content or ""
+                        if response_text:
+                            break
+                    except Exception:
+                        continue
             else:
                 return self._deterministic_route_classification(state)
 

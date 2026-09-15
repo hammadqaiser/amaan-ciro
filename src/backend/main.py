@@ -41,19 +41,14 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 # ── Check API key availability ──
-gateway_api_key = os.environ.get("AI_GATEWAY_API_KEY") or os.environ.get("VERCEL_AI_GATEWAY_KEY")
 groq_api_key = os.environ.get("GROQ_API_KEY")
-gemini_api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
 
-if gateway_api_key:
-    gateway_model = os.environ.get("AI_GATEWAY_MODEL", "google/gemini-2.0-flash")
-    print(f"[Amaan] Vercel AI Gateway detected (model: {gateway_model}, key: ...{gateway_api_key[-4:]})")
-elif groq_api_key:
-    print(f"[Amaan] Groq API key detected (key: ...{groq_api_key[-4:]})")
-elif gemini_api_key:
-    print(f"[Amaan] Gemini API key detected (key: ...{gemini_api_key[-4:]})")
+if groq_api_key:
+    from agents.base_agent import GROQ_MODELS
+    print(f"[Amaan] Groq LPU API detected (key: ...{groq_api_key[-4:]})")
+    print(f"[Amaan] Active parallel models: {', '.join(GROQ_MODELS)}")
 else:
-    print("[Amaan] WARNING: No AI Gateway or LLM key set. Agents will use fallback mode.")
+    print("[Amaan] WARNING: No GROQ_API_KEY set. Agents will use deterministic fallback mode.")
 
 # ── Imports from our agents/models ──
 from orchestrator import AmaanOrchestrator, OrchestratorResponse
