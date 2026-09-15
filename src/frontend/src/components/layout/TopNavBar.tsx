@@ -48,7 +48,7 @@ export default function TopNavBar() {
       <div className="flex items-center gap-2">
         {/* Scenario Triggers */}
         <div className="flex gap-1.5 pr-2">
-          <button 
+          <button
             onClick={() => triggerPipelineRun('/pipeline/run')}
             disabled={isLoading}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded text-[10px] font-bold tracking-wider uppercase transition-colors disabled:opacity-50"
@@ -58,8 +58,8 @@ export default function TopNavBar() {
             <span className="hidden sm:inline">LIVE SCENARIO</span>
             <span className="sm:hidden">LIVE</span>
           </button>
-          
-          <button 
+
+          <button
             onClick={() => triggerPipelineRun('/demo/scenario-a-v2')}
             disabled={isLoading}
             className="px-2.5 py-1.5 bg-[#111] hover:bg-[#222] text-gray-400 border border-[#333] rounded text-[10px] font-bold tracking-wider uppercase transition-colors disabled:opacity-50"
@@ -68,7 +68,7 @@ export default function TopNavBar() {
             SCRIPTED SCENARIO A
           </button>
 
-          <button 
+          <button
             onClick={() => triggerPipelineRun('/demo/scenario-b')}
             disabled={isLoading}
             className="px-2.5 py-1.5 bg-[#111] hover:bg-[#222] text-gray-400 border border-[#333] rounded text-[10px] font-bold tracking-wider uppercase transition-colors disabled:opacity-50"
@@ -77,7 +77,7 @@ export default function TopNavBar() {
             SCRIPTED SCENARIO B
           </button>
 
-          <button 
+          <button
             onClick={() => triggerPipelineRun('/demo/scenario-c')}
             disabled={isLoading}
             className="px-2.5 py-1.5 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-900/50 rounded text-[10px] font-bold tracking-wider uppercase transition-colors disabled:opacity-50"

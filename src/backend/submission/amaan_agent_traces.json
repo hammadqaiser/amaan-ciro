@@ -16460,5 +16460,1843 @@
     },
     "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
     "fallback_triggered": false
+  },
+  {
+    "trace_id": "a753f514-dcbb-4f37-8920-743e64dec69a",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T20:23:37.430026+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.64390011858219,
+        "lng": 73.04242148182603,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo returned: Current Temp: 25.8\u00b0C, Wind: 6.1 km/h \u2014 credibility 0.92",
+      "Google Traffic derived: Google Maps Traffic: LIGHT congestion detected. Average speed: 42 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Neighborhood update for Islamabad. Everything is quiet, clear weath... \u2014 credibility 0.70",
+      "GDELT live API failed/timed out: Client error '429 Too Many Requests' for url 'https://api.gdeltproject.org/api/v2/doc/doc?query=islamabad+flood+OR+islamabad+rain+OR+islamabad+weather+OR+islamabad+emergency&mode=artlist&maxrecords=10&format=json&timespan=24h'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+      "No live GDELT news found. Activating dynamic local news synthesis.",
+      "Synthesized 1 routine news signal for clear weather in Islamabad.",
+      "Total: 4 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.83"
+    ],
+    "confidence_score": 0.83,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "5543804b-aa30-4d2f-b875-f4916d6b48f8",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T20:23:39.775587+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.64390011858219,
+        "lng": 73.04242148182603,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as infrastructure with 0.35 confidence.",
+      "Season: Standard, Time: 2026-05-23T20:23:37.712683+00:00",
+      "LLM reasoning: The signals show no weather anomalies, with temperature at 25.8\u00b0C and no significant rainfall. The traffic and citizen reports also indicate normal conditions, with light congestion and no major hazards. Therefore, the crisis type is classified as infrastructure with a low confidence score, as the signals are truly routine with zero concerning data."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "crisis_type": "infrastructure",
+      "sub_type": "routine",
+      "status": "unverified",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "25e71e31-81d3-4b41-845b-3e12a12be6dd",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-05-23T20:23:40.911395+00:00",
+    "input_data": {
+      "crisis_id": "71cca66a-6760-4dba-90f3-a8f2b4597ac2",
+      "trigger_mode": "immediate",
+      "new_signal_count": 4
+    },
+    "reasoning_steps": [
+      "Verification triggered in immediate mode",
+      "Evaluating 4 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis CONFIRMED. Confidence delta: +0.00",
+      "Reasoning: New signals received do not contradict the original classification. All signals continue to indicate normal conditions with no major hazards or traffic accidents reported, supporting the original classification of infrastructure with a sub-type of routine."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "verdict": "confirmed",
+      "confidence_delta": 0.0,
+      "retracted": false
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "8450df47-894b-4a0a-8c72-9b61b0802853",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T20:23:41.158350+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "location": {
+        "lat": 33.64390011858219,
+        "lng": 73.04242148182603,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "weather_summary": {
+        "rainfall_mm": 0.0,
+        "temp_c": 25.8,
+        "rainfall_intensity_mm_per_hr": 0.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for infrastructure crisis",
+      "No specific calculation for infrastructure, using defaults",
+      "Severity: Level 2 (Moderate)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 2,
+      "affected_population": 5000,
+      "estimated_duration_hours": 2.0,
+      "spread_risk": 0.5
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "520cb67a-98dc-4943-821e-c921fcee6d8c",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T20:23:41.402993+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 71cca66a-6760-4dba-90f3-a8f2b4597ac2: 2 \u00d7 5000 \u00d7 0.50 = 5000",
+      "Ranked crises: ['71cca66a-6760-4dba-90f3-a8f2b4597ac2 (score=5000)']",
+      "Allocating for 71cca66a-6760-4dba-90f3-a8f2b4597ac2 (infrastructure, severity 2): needs {'rescue_teams': 2, 'police_traffic_units': 2, 'ambulances': 1}",
+      "Total deployed: 5, Total cost: PKR 71,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 5,
+      "total_cost_pkr": 71000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "7aecec72-1077-4553-a6ab-4e42645a17d8",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T20:23:42.981261+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "population_at_risk": 5000,
+      "resources_deployed": 5
+    },
+    "reasoning_steps": [
+      "Before State: 5,000 at risk, 10 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 0 remain at risk",
+      "Response coverage: 100%",
+      "Lives protected: 50",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 50,
+      "response_coverage_pct": 100.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "ebec2547-8046-421e-8e52-60bf41f64183",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T20:23:50.535413+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "severity": 2,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Used template-based fallback messages (Gemini unavailable)",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "c63c4992-735a-4aeb-abcf-1d435c6a9a09",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T20:24:56.162068+00:00",
+    "input_data": {
+      "location": {
+        "additionalProp1": {}
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo failed: 'lat'. Generating localized weather baseline.",
+      "Synthesized weather signal: 82.0mm heavy monsoon rainfall in past 3 hours. Current precipitation: 25.0 mm/hr",
+      "Google Traffic derived: Google Maps Traffic: SEVERE congestion detected. Average speed: 6 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Urgent! Water levels rising rapidly in basements and streets in Isl... \u2014 credibility 0.70",
+      "GDELT live API failed/timed out: ",
+      "No live GDELT news found. Activating dynamic local news synthesis.",
+      "Synthesized 3 high-severity flood news signals for Islamabad.",
+      "Total: 6 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.85"
+    ],
+    "confidence_score": 0.847,
+    "decision_made": {
+      "total_signals": 6,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "6c3227e2-6860-4176-a4bb-15eecdac4cf9",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T20:24:58.128298+00:00",
+    "input_data": {
+      "signal_count": 6,
+      "location": {
+        "additionalProp1": {}
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as urban_flood with 0.92 confidence.",
+      "Season: Standard, Time: 2026-05-23T20:24:56.559224+00:00",
+      "LLM reasoning: The classification as an urban flood is based on the heavy monsoon rainfall of 82.0mm in the past 3 hours, severe traffic congestion due to road flooding, and citizen reports of rising water levels in basements and streets. The high credibility scores of the signals from PMD and Google Traffic, along with the corroborating field report from the citizen app, support this classification. The historical vulnerability data and current season also contribute to the high confidence score."
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "heavy_rainfall",
+      "status": "active",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "23b8dfc5-b5c3-4dc3-8267-53f1c144bc0a",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T20:25:00.320827+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "additionalProp1": {}
+      },
+      "weather_summary": {
+        "rainfall_mm": 82.0,
+        "temp_c": 24.0,
+        "rainfall_intensity_mm_per_hr": 25.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (82.0mm / 12mm/hr) \u00d7 1.3 = 8.9 hours",
+      "Spread risk = (25.0/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.2/\u03c0) = 1.16 km",
+      "Affected pop = \u03c0 \u00d7 1.16\u00b2 \u00d7 8500 \u00d7 0.85 = 30345",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 30345,
+      "estimated_duration_hours": 8.9,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "e8f09e01-d5d7-4433-b0e3-d21a50e7d529",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T20:25:00.696008+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for f8c7bece-9aec-4a71-96a8-29d8380d7839: 3 \u00d7 30345 \u00d7 0.95 = 86483",
+      "Ranked crises: ['f8c7bece-9aec-4a71-96a8-29d8380d7839 (score=86483)']",
+      "Allocating for f8c7bece-9aec-4a71-96a8-29d8380d7839 (urban_flood, severity 3): needs {'rescue_boats': 2, 'rescue_teams': 3, 'police_traffic_units': 2, 'ambulances': 2}",
+      "\u26a0\ufe0f BOAT-01 travel time 12671min exceeds 30min constraint",
+      "\u26a0\ufe0f BOAT-02 travel time 12672min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-02 travel time 12670min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-01 travel time 12672min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-03 travel time 12675min exceeds 30min constraint",
+      "\u26a0\ufe0f AMB-01 travel time 12670min exceeds 30min constraint",
+      "\u26a0\ufe0f AMB-02 travel time 12672min exceeds 30min constraint",
+      "Total deployed: 9, Total cost: PKR 156,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 9,
+      "total_cost_pkr": 156000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "33cd3c31-7f76-476c-94a0-56a96fbe6cf1",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T20:25:02.641449+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "population_at_risk": 30345,
+      "resources_deployed": 9
+    },
+    "reasoning_steps": [
+      "Before State: 30,345 at risk, 91 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 25,000 remain at risk",
+      "Response coverage: 1%",
+      "Lives protected: 500",
+      "Baseline comparison: 8min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 8.0,
+      "lives_protected": 500,
+      "response_coverage_pct": 0.8
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "b3be4b63-13ba-4ce8-8fa5-0d8dd531037e",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T20:25:10.307844+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "severity": 3,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Used template-based fallback messages (Gemini unavailable)",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "d04b3db8-d0a1-4b2b-9e0f-71c6c600043d",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T20:36:37.259850+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.64744311197994,
+        "lng": 73.03764021666379,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo returned: Current Temp: 25.7\u00b0C, Wind: 6.3 km/h \u2014 credibility 0.92",
+      "Google Traffic derived: Google Maps Traffic: LIGHT congestion detected. Average speed: 42 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Neighborhood update for Islamabad. Everything is quiet, clear weath... \u2014 credibility 0.70",
+      "GDELT live API failed/timed out: Expecting value: line 1 column 1 (char 0)",
+      "No live GDELT news found. Activating dynamic local news synthesis.",
+      "Synthesized 1 routine news signal for clear weather in Islamabad.",
+      "Total: 4 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.83"
+    ],
+    "confidence_score": 0.83,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "6e2dc90d-783c-4fea-8bfe-7cb713d67341",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T20:36:39.534959+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.64744311197994,
+        "lng": 73.03764021666379,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as infrastructure with 0.35 confidence.",
+      "Season: Standard, Time: 2026-05-23T20:36:38.146183+00:00",
+      "LLM reasoning: All signals indicate normal conditions with no weather anomalies, accidents, or other crisis indicators. The temperature is 25.7\u00b0C, which is not extreme, and there is no significant rainfall. The traffic is also reported as light with an average speed of 42 km/h, indicating no major disruptions."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "crisis_type": "infrastructure",
+      "sub_type": "routine",
+      "status": "unverified",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "c1c05132-c6ae-4012-9b80-c89335e55fda",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-05-23T20:36:40.917038+00:00",
+    "input_data": {
+      "crisis_id": "a06ed107-4b87-40ee-85d8-27acad90b67d",
+      "trigger_mode": "immediate",
+      "new_signal_count": 4
+    },
+    "reasoning_steps": [
+      "Verification triggered in immediate mode",
+      "Evaluating 4 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis CONFIRMED. Confidence delta: +0.00",
+      "Reasoning: New signals support the original classification. All signals indicate normal conditions with no weather anomalies, accidents, or other crisis indicators. The temperature is 25.7\u00b0C, which is not extreme, and there is no significant rainfall. The traffic is also reported as light with an average speed of 42 km/h, indicating no major disruptions."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "verdict": "confirmed",
+      "confidence_delta": 0.0,
+      "retracted": false
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "af1a6ed4-55cd-4564-b3aa-5bb0c0b60918",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T20:36:43.243938+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "location": {
+        "lat": 33.64744311197994,
+        "lng": 73.03764021666379,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "weather_summary": {
+        "rainfall_mm": 0.0,
+        "temp_c": 25.7,
+        "rainfall_intensity_mm_per_hr": 0.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for infrastructure crisis",
+      "No specific calculation for infrastructure, using defaults",
+      "Severity: Level 2 (Moderate)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 2,
+      "affected_population": 5000,
+      "estimated_duration_hours": 2.0,
+      "spread_risk": 0.5
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "00b26b9a-bb4d-46c8-a3f6-a5419f1fb97d",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T20:36:44.483740+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for a06ed107-4b87-40ee-85d8-27acad90b67d: 2 \u00d7 5000 \u00d7 0.50 = 5000",
+      "Ranked crises: ['a06ed107-4b87-40ee-85d8-27acad90b67d (score=5000)']",
+      "Allocating for a06ed107-4b87-40ee-85d8-27acad90b67d (infrastructure, severity 2): needs {'rescue_teams': 2, 'police_traffic_units': 2, 'ambulances': 1}",
+      "Total deployed: 5, Total cost: PKR 71,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 5,
+      "total_cost_pkr": 71000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "7cca6fb3-ae4e-43e1-84b7-fe3bf9b75913",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T20:36:47.115553+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "population_at_risk": 5000,
+      "resources_deployed": 5
+    },
+    "reasoning_steps": [
+      "Before State: 5,000 at risk, 10 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 0 remain at risk",
+      "Response coverage: 90%",
+      "Lives protected: 50",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 50,
+      "response_coverage_pct": 90.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "4e26a3ca-0a76-43ce-a60c-630a0d7c7cee",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T20:36:52.143162+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "severity": 2,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Generated context-aware messages via Gemini LLM",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "abe902d6-d9fb-4e44-8ebe-0c45c9849d15",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T20:38:05.468380+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.66266920327138,
+        "lng": 71.63573935454761,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo returned: Current Temp: 23.3\u00b0C, Wind: 1.4 km/h \u2014 credibility 0.92",
+      "Google Traffic derived: Google Maps Traffic: LIGHT congestion detected. Average speed: 42 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Neighborhood update for Islamabad. Everything is quiet, clear weath... \u2014 credibility 0.70",
+      "GDELT live API failed/timed out: Client error '429 Too Many Requests' for url 'https://api.gdeltproject.org/api/v2/doc/doc?query=islamabad+flood+OR+islamabad+rain+OR+islamabad+weather+OR+islamabad+emergency&mode=artlist&maxrecords=10&format=json&timespan=24h'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+      "No live GDELT news found. Activating dynamic local news synthesis.",
+      "Synthesized 1 routine news signal for clear weather in Islamabad.",
+      "Total: 4 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.83"
+    ],
+    "confidence_score": 0.83,
+    "decision_made": {
+      "total_signals": 4,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "705c6bf7-30d9-40ff-b145-611ebca49b24",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T20:38:06.996547+00:00",
+    "input_data": {
+      "signal_count": 4,
+      "location": {
+        "lat": 33.66266920327138,
+        "lng": 71.63573935454761,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as infrastructure with 0.35 confidence.",
+      "Season: Standard, Time: 2026-05-23T20:38:05.744566+00:00",
+      "LLM reasoning: The signals show no weather anomalies, with temperature at 23.3\u00b0C, wind at 1.4 km/h, and no rainfall. The traffic and field reports also indicate normal conditions, with light congestion and no major hazards. Therefore, the crisis type is classified as infrastructure with a low confidence score, as there is no concerning data in the signals."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "crisis_type": "infrastructure",
+      "sub_type": "routine",
+      "status": "unverified",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "83dcec60-cf94-4971-9cd2-7076b6f3e02b",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-05-23T20:38:08.328014+00:00",
+    "input_data": {
+      "crisis_id": "3eebc494-465f-4152-81ef-0b6a5e04bd83",
+      "trigger_mode": "immediate",
+      "new_signal_count": 4
+    },
+    "reasoning_steps": [
+      "Verification triggered in immediate mode",
+      "Evaluating 4 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis CONFIRMED. Confidence delta: +0.00",
+      "Reasoning: New signals received do not contradict the original classification. All signals support the original classification of infrastructure with a routine sub-type. The credibility scores of the new signals are high, but none directly contradict the current classification, and thus the confidence score remains unchanged."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "verdict": "confirmed",
+      "confidence_delta": 0.0,
+      "retracted": false
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "d186a842-427a-4ba4-8a1e-5f8a4ac40e0a",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T20:38:08.562850+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "location": {
+        "lat": 33.66266920327138,
+        "lng": 71.63573935454761,
+        "city": "Islamabad",
+        "sector": "G-10"
+      },
+      "weather_summary": {
+        "rainfall_mm": 0.0,
+        "temp_c": 23.3,
+        "rainfall_intensity_mm_per_hr": 0.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for infrastructure crisis",
+      "No specific calculation for infrastructure, using defaults",
+      "Severity: Level 2 (Moderate)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 2,
+      "affected_population": 5000,
+      "estimated_duration_hours": 2.0,
+      "spread_risk": 0.5
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "ace15ced-783b-4e1e-b693-5edc1c4039cf",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T20:38:09.050393+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 3eebc494-465f-4152-81ef-0b6a5e04bd83: 2 \u00d7 5000 \u00d7 0.50 = 5000",
+      "Ranked crises: ['3eebc494-465f-4152-81ef-0b6a5e04bd83 (score=5000)']",
+      "Allocating for 3eebc494-465f-4152-81ef-0b6a5e04bd83 (infrastructure, severity 2): needs {'rescue_teams': 2, 'police_traffic_units': 2, 'ambulances': 1}",
+      "\u26a0\ufe0f TEAM-02 travel time 195min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-01 travel time 198min exceeds 30min constraint",
+      "\u26a0\ufe0f AMB-01 travel time 196min exceeds 30min constraint",
+      "Total deployed: 5, Total cost: PKR 71,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 5,
+      "total_cost_pkr": 71000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "fadf4ffd-b045-4016-81c0-cb445f1411c3",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T20:38:11.398348+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "population_at_risk": 5000,
+      "resources_deployed": 5
+    },
+    "reasoning_steps": [
+      "Before State: 5,000 at risk, 10 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 5,000 remain at risk",
+      "Response coverage: 80%",
+      "Lives protected: 50",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 50,
+      "response_coverage_pct": 80.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "e5dda40e-3cb5-41ed-8d66-e5079ab93fe5",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T20:38:14.325834+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "severity": 2,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Generated context-aware messages via Gemini LLM",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "630ce557-d495-45da-9288-a90e0530df01",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T20:39:53.149699+00:00",
+    "input_data": {
+      "location": {
+        "additionalProp1": {}
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo failed: 'lat'. Generating localized weather baseline.",
+      "Synthesized weather signal: 82.0mm heavy monsoon rainfall in past 3 hours. Current precipitation: 25.0 mm/hr",
+      "Google Traffic derived: Google Maps Traffic: SEVERE congestion detected. Average speed: 6 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Urgent! Water levels rising rapidly in basements and streets in Isl... \u2014 credibility 0.70",
+      "GDELT live API failed/timed out: Client error '429 Too Many Requests' for url 'https://api.gdeltproject.org/api/v2/doc/doc?query=islamabad+flood+OR+islamabad+rain+OR+islamabad+weather+OR+islamabad+emergency&mode=artlist&maxrecords=10&format=json&timespan=24h'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+      "No live GDELT news found. Activating dynamic local news synthesis.",
+      "Synthesized 3 high-severity flood news signals for Islamabad.",
+      "Total: 6 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.85"
+    ],
+    "confidence_score": 0.847,
+    "decision_made": {
+      "total_signals": 6,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "87eded3f-f3aa-4f2f-845d-741d24111c0c",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T20:39:54.592274+00:00",
+    "input_data": {
+      "signal_count": 6,
+      "location": {
+        "additionalProp1": {}
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as urban_flood with 0.92 confidence.",
+      "Season: Standard, Time: 2026-05-23T20:39:53.417501+00:00",
+      "LLM reasoning: The classification as an urban flood is based on the heavy monsoon rainfall of 82.0mm in the past 3 hours, severe traffic congestion due to road flooding, and citizen reports of rising water levels in basements and streets. The high credibility score of the PMD signal and corroborating signals from other sources support this classification. The historical vulnerability data of the area, including a high flood vulnerability and low drainage capacity, also contribute to the confidence in this classification."
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "heavy_rainfall",
+      "status": "active",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "9f7e8354-dd51-4de4-8f15-937fea382019",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T20:39:54.940544+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "additionalProp1": {}
+      },
+      "weather_summary": {
+        "rainfall_mm": 82.0,
+        "temp_c": 24.0,
+        "rainfall_intensity_mm_per_hr": 25.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (82.0mm / 12mm/hr) \u00d7 1.3 = 8.9 hours",
+      "Spread risk = (25.0/10) \u00d7 (1 - 0.40) = 0.95",
+      "Affected radius = \u221a(4.2/\u03c0) = 1.16 km",
+      "Affected pop = \u03c0 \u00d7 1.16\u00b2 \u00d7 8500 \u00d7 0.85 = 30345",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 30345,
+      "estimated_duration_hours": 8.9,
+      "spread_risk": 0.95
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "0ea83f2f-89ec-4e3b-bb4b-ba622db31c10",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T20:39:55.419251+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 590d87dc-40c0-44a0-950f-8139bb128543: 3 \u00d7 30345 \u00d7 0.95 = 86483",
+      "Ranked crises: ['590d87dc-40c0-44a0-950f-8139bb128543 (score=86483)']",
+      "Allocating for 590d87dc-40c0-44a0-950f-8139bb128543 (urban_flood, severity 3): needs {'rescue_boats': 2, 'rescue_teams': 3, 'police_traffic_units': 2, 'ambulances': 2}",
+      "\u26a0\ufe0f BOAT-01 travel time 12671min exceeds 30min constraint",
+      "\u26a0\ufe0f BOAT-02 travel time 12672min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-02 travel time 12670min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-01 travel time 12672min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-03 travel time 12675min exceeds 30min constraint",
+      "\u26a0\ufe0f AMB-01 travel time 12670min exceeds 30min constraint",
+      "\u26a0\ufe0f AMB-02 travel time 12672min exceeds 30min constraint",
+      "Total deployed: 9, Total cost: PKR 156,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 9,
+      "total_cost_pkr": 156000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "69a2ed2d-1bda-47c8-8a3e-030cd01d903b",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T20:39:57.446562+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "population_at_risk": 30345,
+      "resources_deployed": 9
+    },
+    "reasoning_steps": [
+      "Before State: 30,345 at risk, 91 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 25,000 remain at risk",
+      "Response coverage: 1%",
+      "Lives protected: 200",
+      "Baseline comparison: 8min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 8.0,
+      "lives_protected": 200,
+      "response_coverage_pct": 0.8
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "ef82ab1d-13dd-494f-a7e9-3a67be7f26fa",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T20:40:04.713551+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "severity": 3,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Used template-based fallback messages (Gemini unavailable)",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "a15594bd-eb40-4828-9336-90e0ebbf651f",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T20:47:04.768300+00:00",
+    "input_data": {
+      "location": {
+        "additionalProp1": {}
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo failed: 'lat'. Using baseline weather parameters.",
+      "Google Traffic derived: Google Maps Traffic: LIGHT congestion detected. Average speed: 42 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Neighborhood update for Islamabad. Everything is quiet, clear weath... \u2014 credibility 0.70",
+      "GDELT failed: Client error '429 Too Many Requests' for url 'https://api.gdeltproject.org/api/v2/doc/doc?query=islamabad+flood+OR+islamabad+rain+OR+islamabad+weather+OR+islamabad+emergency&mode=artlist&maxrecords=10&format=json&timespan=24h'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+      "Total: 2 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.78"
+    ],
+    "confidence_score": 0.785,
+    "decision_made": {
+      "total_signals": 2,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "open-meteo",
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "8126c1ce-d103-4e06-b278-05bbaec7dac2",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T20:47:06.745882+00:00",
+    "input_data": {
+      "signal_count": 2,
+      "location": {
+        "additionalProp1": {}
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as infrastructure with 0.35 confidence.",
+      "Season: Standard, Time: 2026-05-23T20:47:05.012155+00:00",
+      "LLM reasoning: The signals provided indicate light traffic congestion and a routine neighborhood update with no major hazards or traffic accidents, leading to a classification of infrastructure with a low confidence score. The historical vulnerability data and current season do not indicate any specific crisis type. The signals are truly routine with zero concerning data, resulting in the chosen classification."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "crisis_type": "infrastructure",
+      "sub_type": "routine_traffic",
+      "status": "unverified",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "0314d5d0-45ac-44b1-9fc9-0f04b1f8c24f",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-05-23T20:47:43.704716+00:00",
+    "input_data": {
+      "crisis_id": "bac89123-a3b8-4ce9-b8a3-3eeac2af8042",
+      "trigger_mode": "immediate",
+      "new_signal_count": 2
+    },
+    "reasoning_steps": [
+      "Verification triggered in immediate mode",
+      "Evaluating 2 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis CONFIRMED. Confidence delta: +0.00",
+      "Reasoning: New signals support the original classification of infrastructure with sub-type routine_traffic. The signals from google_traffic and citizen_app sources indicate light traffic congestion and a routine neighborhood update with no major hazards or traffic accidents, which aligns with the original classification. The credibility scores of the new signals are 0.87 and 0.7, respectively, but neither directly contradicts the current classification, and thus, retraction rules are not met."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "verdict": "confirmed",
+      "confidence_delta": 0.0,
+      "retracted": false
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "b6031804-37f2-4d0b-b9d4-b08d773724bb",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T20:47:44.144714+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "location": {
+        "additionalProp1": {}
+      },
+      "weather_summary": {
+        "rainfall_mm": 60,
+        "temp_c": 30,
+        "rainfall_intensity_mm_per_hr": 20
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for infrastructure crisis",
+      "No specific calculation for infrastructure, using defaults",
+      "Severity: Level 2 (Moderate)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 2,
+      "affected_population": 5000,
+      "estimated_duration_hours": 2.0,
+      "spread_risk": 0.5
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "7a9030c3-67a9-4db5-8906-ce7d4a356838",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T20:47:44.489206+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for bac89123-a3b8-4ce9-b8a3-3eeac2af8042: 2 \u00d7 5000 \u00d7 0.50 = 5000",
+      "Ranked crises: ['bac89123-a3b8-4ce9-b8a3-3eeac2af8042 (score=5000)']",
+      "Allocating for bac89123-a3b8-4ce9-b8a3-3eeac2af8042 (infrastructure, severity 2): needs {'rescue_teams': 2, 'police_traffic_units': 2, 'ambulances': 1}",
+      "\u26a0\ufe0f TEAM-02 travel time 12670min exceeds 30min constraint",
+      "\u26a0\ufe0f TEAM-01 travel time 12672min exceeds 30min constraint",
+      "\u26a0\ufe0f AMB-01 travel time 12670min exceeds 30min constraint",
+      "Total deployed: 5, Total cost: PKR 71,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 5,
+      "total_cost_pkr": 71000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "3abca7f2-b74c-465c-9dbd-e1804fba4897",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T20:47:46.654167+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "population_at_risk": 5000,
+      "resources_deployed": 5
+    },
+    "reasoning_steps": [
+      "Before State: 5,000 at risk, 10 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 0 remain at risk",
+      "Response coverage: 100%",
+      "Lives protected: 50",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 50,
+      "response_coverage_pct": 100.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "5700e087-0a8a-4efc-9ef3-3ac35f65b71f",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T20:47:50.250120+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "severity": 2,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Generated context-aware messages via Gemini LLM",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "a54f77c0-2b89-4975-b351-cd351c8edbcf",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T20:47:57.193347+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.64387899999999,
+        "lng": 73.042526,
+        "city": "Islamabad"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo returned: Current Temp: 25.6\u00b0C, Wind: 6.4 km/h \u2014 credibility 0.92",
+      "Google Traffic derived: Google Maps Traffic: LIGHT congestion detected. Average speed: 42 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Neighborhood update for Islamabad. Everything is quiet, clear weath... \u2014 credibility 0.70",
+      "GDELT failed: Client error '429 Too Many Requests' for url 'https://api.gdeltproject.org/api/v2/doc/doc?query=islamabad+flood+OR+islamabad+rain+OR+islamabad+weather+OR+islamabad+emergency&mode=artlist&maxrecords=10&format=json&timespan=24h'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+      "Total: 3 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.83"
+    ],
+    "confidence_score": 0.83,
+    "decision_made": {
+      "total_signals": 3,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "730ca2b6-7c08-410f-90bd-9057eba7d69f",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T20:47:58.462178+00:00",
+    "input_data": {
+      "signal_count": 3,
+      "location": {
+        "lat": 33.64387899999999,
+        "lng": 73.042526,
+        "city": "Islamabad"
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as infrastructure with 0.35 confidence.",
+      "Season: Standard, Time: 2026-05-23T20:47:57.504720+00:00",
+      "LLM reasoning: The signals show no weather anomalies, with temperature at 25.6\u00b0C, wind at 6.4 km/h, and no precipitation. The traffic signal indicates light congestion, and the citizen app report confirms that everything is quiet with no major hazards or traffic accidents. Given the lack of concerning data, the crisis is classified as infrastructure with a low confidence score."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "crisis_type": "infrastructure",
+      "sub_type": "routine",
+      "status": "unverified",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "e8c47295-2252-4c4c-a267-31e7519786f5",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-05-23T20:47:59.486834+00:00",
+    "input_data": {
+      "crisis_id": "7d7918aa-2f38-4fcf-91ef-5c7d1370b93c",
+      "trigger_mode": "immediate",
+      "new_signal_count": 3
+    },
+    "reasoning_steps": [
+      "Verification triggered in immediate mode",
+      "Evaluating 3 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis CONFIRMED. Confidence delta: +0.00",
+      "Reasoning: New signals support the original classification as infrastructure with routine sub-type. The signals show no weather anomalies, light traffic congestion, and a citizen app report confirming everything is quiet with no major hazards or traffic accidents, which aligns with the original classification."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "verdict": "confirmed",
+      "confidence_delta": 0.0,
+      "retracted": false
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "7c1cfbc9-a97d-488c-bd38-893415ebedf3",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T20:47:59.767095+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "location": {
+        "lat": 33.64387899999999,
+        "lng": 73.042526,
+        "city": "Islamabad"
+      },
+      "weather_summary": {
+        "rainfall_mm": 0.0,
+        "temp_c": 25.6,
+        "rainfall_intensity_mm_per_hr": 0.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for infrastructure crisis",
+      "No specific calculation for infrastructure, using defaults",
+      "Severity: Level 2 (Moderate)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 2,
+      "affected_population": 5000,
+      "estimated_duration_hours": 2.0,
+      "spread_risk": 0.5
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "e2f96caf-caf8-4a91-85af-437a16b922ed",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T20:48:00.023046+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 7d7918aa-2f38-4fcf-91ef-5c7d1370b93c: 2 \u00d7 5000 \u00d7 0.50 = 5000",
+      "Ranked crises: ['7d7918aa-2f38-4fcf-91ef-5c7d1370b93c (score=5000)']",
+      "Allocating for 7d7918aa-2f38-4fcf-91ef-5c7d1370b93c (infrastructure, severity 2): needs {'rescue_teams': 2, 'police_traffic_units': 2, 'ambulances': 1}",
+      "Total deployed: 5, Total cost: PKR 71,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 5,
+      "total_cost_pkr": 71000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "1f3e37f6-2d0c-4b04-bff4-247cdd8fed05",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T20:48:01.653357+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "population_at_risk": 5000,
+      "resources_deployed": 5
+    },
+    "reasoning_steps": [
+      "Before State: 5,000 at risk, 10 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 0 remain at risk",
+      "Response coverage: 95%",
+      "Lives protected: 50",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 50,
+      "response_coverage_pct": 95.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "6aad4eb4-41ee-4e03-a410-335d602fc5af",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T20:48:04.525730+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "severity": 2,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Generated context-aware messages via Gemini LLM",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "703c773e-34b2-4d31-a74f-0b8e98100521",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T21:08:47.622987+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.643921,
+        "lng": 73.040995,
+        "city": "\u0627\u0633\u0644\u0627\u0645 \u0622\u0628\u0627\u062f"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Reverse geocoded location to \u0627\u0633\u0644\u0627\u0645 \u0622\u0628\u0627\u062f",
+      "Open-Meteo returned: Current Temp: 25.6\u00b0C, Wind: 6.3 km/h \u2014 credibility 0.92",
+      "Google Traffic derived: Google Maps Traffic: LIGHT congestion detected. Average speed: 42 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Neighborhood update for \u0627\u0633\u0644\u0627\u0645 \u0622\u0628\u0627\u062f. Everything is quiet, clear weat... \u2014 credibility 0.70",
+      "GDELT returned 5 social signals \u2014 avg credibility 0.72",
+      "Total: 8 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.84"
+    ],
+    "confidence_score": 0.837,
+    "decision_made": {
+      "total_signals": 8,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "6f3edf70-54b7-43fc-92b9-5e3038f7423d",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T21:08:49.146884+00:00",
+    "input_data": {
+      "signal_count": 8,
+      "location": {
+        "lat": 33.643921,
+        "lng": 73.040995
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as urban_flood with 0.85 confidence.",
+      "Season: Standard, Time: 2026-05-23T21:08:47.721369+00:00",
+      "LLM reasoning: The classification as urban_flood is due to the heavy downpour in Islamabad with over 145mm of rain recorded, and at least 13 deaths and 92 injuries reported. The historical vulnerability data for the area also indicates a high flood vulnerability. The signals from Google News about the heavy rainfall and its consequences are the dominant factors in this classification."
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "crisis_type": "urban_flood",
+      "sub_type": "heavy_rainfall",
+      "status": "active",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "cd70cf58-8892-4ccf-b75b-3127502d59ad",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T21:08:49.420363+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "location": {
+        "lat": 33.643921,
+        "lng": 73.040995
+      },
+      "weather_summary": {
+        "rainfall_mm": 0.0,
+        "temp_c": 25.6,
+        "rainfall_intensity_mm_per_hr": 0.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for urban_flood crisis",
+      "Duration = (0.0mm / 12mm/hr) \u00d7 1.3 = 0.0 hours",
+      "Spread risk = (0.0/10) \u00d7 (1 - 0.40) = 0.00",
+      "Affected radius = \u221a(4.2/\u03c0) = 1.16 km",
+      "Affected pop = \u03c0 \u00d7 1.16\u00b2 \u00d7 8500 \u00d7 0.85 = 30345",
+      "Severity: Level 3 (Severe)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 3,
+      "affected_population": 30345,
+      "estimated_duration_hours": 0.0,
+      "spread_risk": 0.0
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "91be4489-5c09-438f-9f79-f2548f034f14",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T21:08:49.803045+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 16140c1a-41bb-49ca-95fa-180e090c4421: 3 \u00d7 30345 \u00d7 0.00 = 0",
+      "Ranked crises: ['16140c1a-41bb-49ca-95fa-180e090c4421 (score=0)']",
+      "Allocating for 16140c1a-41bb-49ca-95fa-180e090c4421 (urban_flood, severity 3): needs {'rescue_boats': 2, 'rescue_teams': 3, 'police_traffic_units': 2, 'ambulances': 2}",
+      "Total deployed: 9, Total cost: PKR 156,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 9,
+      "total_cost_pkr": 156000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "c3789e2d-ddec-4ec3-80ac-0f6601a9087c",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T21:08:51.745115+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "population_at_risk": 30345,
+      "resources_deployed": 9
+    },
+    "reasoning_steps": [
+      "Before State: 30,345 at risk, 91 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 0 remain at risk",
+      "Response coverage: 90%",
+      "Lives protected: 200",
+      "Baseline comparison: 8min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 8.0,
+      "lives_protected": 200,
+      "response_coverage_pct": 90.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "03259cc5-8e9b-4558-9d30-4e5de45f1ede",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T21:08:58.948421+00:00",
+    "input_data": {
+      "crisis_type": "urban_flood",
+      "severity": 3,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Used template-based fallback messages (Gemini unavailable)",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": true
+  },
+  {
+    "trace_id": "81f69722-4533-4c20-9ae8-53433570b922",
+    "agent": "SignalIngestionAgent",
+    "timestamp": "2026-05-23T21:11:53.501643+00:00",
+    "input_data": {
+      "location": {
+        "lat": 33.64403596668071,
+        "lng": 73.04230167766391,
+        "city": "Islamabad"
+      },
+      "radius_km": 10.0,
+      "time_window_hours": 2
+    },
+    "reasoning_steps": [
+      "Open-Meteo returned: Current Temp: 25.6\u00b0C, Wind: 6.3 km/h \u2014 credibility 0.92",
+      "Google Traffic derived: Google Maps Traffic: LIGHT congestion detected. Average speed: 42 km/h (free flo... \u2014 credibility 0.87",
+      "Citizen App derived: Citizen App: Neighborhood update for Islamabad. Everything is quiet, clear weath... \u2014 credibility 0.70",
+      "GDELT failed: Client error '429 Too Many Requests' for url 'https://api.gdeltproject.org/api/v2/doc/doc?query=islamabad+flood+OR+islamabad+rain+OR+islamabad+weather+OR+islamabad+emergency&mode=artlist&maxrecords=10&format=json&timespan=24h'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+      "Total: 3 signals collected, 0 stale-flagged, fallback used: False. Fused confidence: 0.83"
+    ],
+    "confidence_score": 0.83,
+    "decision_made": {
+      "total_signals": 3,
+      "sources_contacted": [
+        "open-meteo",
+        "google_traffic",
+        "citizen_app",
+        "gdelt"
+      ],
+      "sources_failed": [
+        "gdelt"
+      ],
+      "fallback": false
+    },
+    "alternative_considered": "If live APIs fail, fallback to demo_scenarios.json",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "ba546a63-2a15-4043-871b-a43726d20684",
+    "agent": "CrisisClassificationAgent",
+    "timestamp": "2026-05-23T21:11:54.966522+00:00",
+    "input_data": {
+      "signal_count": 3,
+      "location": {
+        "lat": 33.64403596668071,
+        "lng": 73.04230167766391,
+        "city": "Islamabad"
+      },
+      "season": "Standard"
+    },
+    "reasoning_steps": [
+      "Classification performed using gemini_inference.",
+      "Classified as infrastructure with 0.35 confidence.",
+      "Season: Standard, Time: 2026-05-23T21:11:53.685175+00:00",
+      "LLM reasoning: The signals show routine weather and traffic conditions with no concerning data, leading to a classification of infrastructure with a low confidence score. The temperature is within normal ranges, and there are no reports of accidents or other crises. The classification is based on the lack of any weather anomalies or crisis indicators in the provided signals."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "crisis_type": "infrastructure",
+      "sub_type": "routine",
+      "status": "unverified",
+      "contradictions_detected": false
+    },
+    "alternative_considered": "Rule-based keyword matching as fallback to Gemini inference",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "7fd0a42d-3500-43af-8dbd-a0e72cc8f5ab",
+    "agent": "VerificationAgent",
+    "timestamp": "2026-05-23T21:11:56.159171+00:00",
+    "input_data": {
+      "crisis_id": "013ba2eb-6671-4311-adde-2a63855b6c51",
+      "trigger_mode": "immediate",
+      "new_signal_count": 3
+    },
+    "reasoning_steps": [
+      "Verification triggered in immediate mode",
+      "Evaluating 3 new signals",
+      "Verification performed via Gemini LLM",
+      "Crisis CONFIRMED. Confidence delta: +0.00",
+      "Reasoning: New signals support the original classification of infrastructure with routine sub-type. All new signals have high credibility scores and do not contradict the current classification. The weather signal shows normal temperature and wind conditions, the traffic signal indicates light congestion, and the field report from the citizen app confirms quiet conditions with no major hazards or traffic accidents. Therefore, the original classification is confirmed with no changes needed."
+    ],
+    "confidence_score": 0.35,
+    "decision_made": {
+      "verdict": "confirmed",
+      "confidence_delta": 0.0,
+      "retracted": false
+    },
+    "alternative_considered": "Rule-based retraction check as fallback to LLM verification",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "b7aec5d9-cf0b-496e-b3ca-d618cbf17b4b",
+    "agent": "SeverityPredictionAgent",
+    "timestamp": "2026-05-23T21:11:56.338064+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "location": {
+        "lat": 33.64403596668071,
+        "lng": 73.04230167766391,
+        "city": "Islamabad"
+      },
+      "weather_summary": {
+        "rainfall_mm": 0.0,
+        "temp_c": 25.6,
+        "rainfall_intensity_mm_per_hr": 0.0
+      }
+    },
+    "reasoning_steps": [
+      "Predicting severity for infrastructure crisis",
+      "No specific calculation for infrastructure, using defaults",
+      "Severity: Level 2 (Moderate)"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "severity_level": 2,
+      "affected_population": 5000,
+      "estimated_duration_hours": 2.0,
+      "spread_risk": 0.5
+    },
+    "alternative_considered": "Gemini-based severity assessment as enhancement to formula-based calculation",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "5c33958d-732f-4593-acc8-fd86779501dd",
+    "agent": "ResourceAllocationAgent",
+    "timestamp": "2026-05-23T21:11:56.616831+00:00",
+    "input_data": {
+      "crisis_count": 1,
+      "budget_pkr": 500000.0,
+      "max_travel_min": 30
+    },
+    "reasoning_steps": [
+      "Impact score for 013ba2eb-6671-4311-adde-2a63855b6c51: 2 \u00d7 5000 \u00d7 0.50 = 5000",
+      "Ranked crises: ['013ba2eb-6671-4311-adde-2a63855b6c51 (score=5000)']",
+      "Allocating for 013ba2eb-6671-4311-adde-2a63855b6c51 (infrastructure, severity 2): needs {'rescue_teams': 2, 'police_traffic_units': 2, 'ambulances': 1}",
+      "Total deployed: 5, Total cost: PKR 71,000",
+      "Unmet needs: None"
+    ],
+    "confidence_score": 0.92,
+    "decision_made": {
+      "total_deployed": 5,
+      "total_cost_pkr": 71000.0,
+      "unmet_needs_count": 0,
+      "crises_served": 1
+    },
+    "alternative_considered": "Proportional allocation vs priority-based. Chose priority-based for higher-impact crises.",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "dff6832c-4611-4575-bd08-b4edbd50a001",
+    "agent": "SimulationAgent",
+    "timestamp": "2026-05-23T21:11:58.120001+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "population_at_risk": 5000,
+      "resources_deployed": 5
+    },
+    "reasoning_steps": [
+      "Before State: 5,000 at risk, 10 potential casualties",
+      "Generated simulation via Gemini LLM",
+      "After State: 0 remain at risk",
+      "Response coverage: 90%",
+      "Lives protected: 100",
+      "Baseline comparison: 10min vs 23min manual dispatch"
+    ],
+    "confidence_score": 0.85,
+    "decision_made": {
+      "amaan_response_time_min": 10.0,
+      "lives_protected": 100,
+      "response_coverage_pct": 90.0
+    },
+    "alternative_considered": "Compared Amaan automated response vs NDMA manual dispatch baseline",
+    "fallback_triggered": false
+  },
+  {
+    "trace_id": "f2201daf-9686-4207-81ba-88cb1a0bd709",
+    "agent": "StakeholderCommsAgent",
+    "timestamp": "2026-05-23T21:12:05.151621+00:00",
+    "input_data": {
+      "crisis_type": "infrastructure",
+      "severity": 2,
+      "audiences": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "reasoning_steps": [
+      "Used template-based fallback messages (Gemini unavailable)",
+      "Generated 5 stakeholder messages for 5 audiences",
+      "Simulated delivery to all 5 stakeholder channels"
+    ],
+    "confidence_score": 0.95,
+    "decision_made": {
+      "message_count": 5,
+      "audiences_covered": [
+        "public",
+        "emergency_services",
+        "hospitals",
+        "media",
+        "ndma"
+      ]
+    },
+    "alternative_considered": "Template-based messages as fallback to LLM-generated",
+    "fallback_triggered": true
   }
 ]

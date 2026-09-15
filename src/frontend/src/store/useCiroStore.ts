@@ -30,13 +30,13 @@ interface CiroState {
   isLoading: boolean;
   agentStatus: string;
   userLocation: { lat: number; lng: number } | null;
-  
+
   // Dashboard States
   isDarkMode: boolean;
   newsFeeds: string[];
   resourceAllocation: any | null;
   simulationResult: any | null;
-  
+
   // Map Layer Toggles
   showCrisisZones: boolean;
   showResources: boolean;
@@ -44,7 +44,7 @@ interface CiroState {
   showShelters: boolean;
   showVulnerabilities: boolean;
   showSignals: boolean;
-  
+
   // Actions
   loadLocalAlerts: () => Promise<void>;
   triggerPipelineRun: (endpoint?: string) => Promise<void>;
@@ -58,12 +58,6 @@ interface CiroState {
 const DEFAULT_LOCATION = { lat: 33.6844, lng: 73.0479 }; // Islamabad
 const GEO_NEWS_URL = "https://www.youtube.com/embed/_FwympjOSNE?autoplay=1&mute=1";
 const ARY_NEWS_URL = "https://www.youtube.com/embed/K77zGtR_X58?autoplay=1&mute=1";
-
-const getCityFromCoordinates = (lat: number, lng: number): string => {
-  if (lat >= 24.0 && lat <= 26.0 && lng >= 66.0 && lng <= 68.0) return "Karachi";
-  if (lat >= 31.0 && lat <= 32.0 && lng >= 74.0 && lng <= 75.0) return "Lahore";
-  return "Islamabad";
-};
 
 const STATUS_MESSAGES = [
   "Ingesting local signals from weather and traffic...",
@@ -82,7 +76,7 @@ export const useCiroStore = create<CiroState>((set, get) => ({
   isLoading: false,
   agentStatus: "System Ready",
   userLocation: null,
-  
+
   isDarkMode: true,
   newsFeeds: [GEO_NEWS_URL, ARY_NEWS_URL],
   resourceAllocation: null,
@@ -97,10 +91,10 @@ export const useCiroStore = create<CiroState>((set, get) => ({
 
   setLocation: (lat, lng) => set({ userLocation: { lat, lng } }),
   setAgentStatus: (status) => set({ agentStatus: status }),
-  
+
   addNewsFeed: (url) => set((state) => ({ newsFeeds: [...state.newsFeeds, url] })),
-  removeNewsFeed: (index) => set((state) => ({ 
-    newsFeeds: state.newsFeeds.filter((_, i) => i !== index) 
+  removeNewsFeed: (index) => set((state) => ({
+    newsFeeds: state.newsFeeds.filter((_, i) => i !== index)
   })),
 
   toggleLayer: (layerName) => set((state: any) => ({ [layerName]: !state[layerName] })),
@@ -112,7 +106,7 @@ export const useCiroStore = create<CiroState>((set, get) => ({
 
   triggerPipelineRun: async (endpoint = '/demo/scenario-a-v2') => {
     set({ isLoading: true, agentStatus: "Acquiring location..." });
-    
+
     // 1. Get Location
     let loc = get().userLocation;
     if (!loc) {
@@ -121,7 +115,7 @@ export const useCiroStore = create<CiroState>((set, get) => ({
           navigator.geolocation.getCurrentPosition(
             (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
             (err) => reject(err),
-            { timeout: 5000, enableHighAccuracy: true }
+            { timeout: 5000 }
           );
         });
         set({ userLocation: loc });
@@ -142,17 +136,8 @@ export const useCiroStore = create<CiroState>((set, get) => ({
 
     // 3. Trigger Backend Pipeline
     try {
-      const latitude = loc?.lat || 33.6844;
-      const longitude = loc?.lng || 73.0479;
-      const city = getCityFromCoordinates(latitude, longitude);
-
       const payload = endpoint === '/pipeline/run' ? {
-        location: { 
-          lat: latitude, 
-          lng: longitude, 
-          city: city,
-          sector: city === "Karachi" ? "Clifton" : city === "Lahore" ? "Johar Town" : "G-10"
-        },
+        location: { lat: loc?.lat || 33.6844, lng: loc?.lng || 73.0479, city: "Islamabad" },
         radius_km: 10.0,
         time_window_hours: 2
       } : undefined;
@@ -168,47 +153,47 @@ export const useCiroStore = create<CiroState>((set, get) => ({
         const aud = rawAudience.trim().toLowerCase();
         const subject = (msg.subject || '').toLowerCase();
         let normalizedAudience = 'public';
-        
+
         if (
-          aud.includes('hospital') || 
-          aud.includes('medical') || 
-          aud.includes('health') || 
-          aud.includes('pims') || 
-          subject.includes('hospital') || 
-          subject.includes('triage') || 
+          aud.includes('hospital') ||
+          aud.includes('medical') ||
+          aud.includes('health') ||
+          aud.includes('pims') ||
+          subject.includes('hospital') ||
+          subject.includes('triage') ||
           aud.includes('clinic')
         ) {
           normalizedAudience = 'hospitals';
         } else if (
-          aud.includes('emergency') || 
-          aud.includes('rescue') || 
-          aud.includes('1122') || 
-          aud.includes('police') || 
-          aud.includes('dispatch') || 
-          subject.includes('dispatch') || 
-          subject.includes('rescue 1122') || 
+          aud.includes('emergency') ||
+          aud.includes('rescue') ||
+          aud.includes('1122') ||
+          aud.includes('police') ||
+          aud.includes('dispatch') ||
+          subject.includes('dispatch') ||
+          subject.includes('rescue 1122') ||
           aud.includes('responder')
         ) {
           normalizedAudience = 'emergency_services';
         } else if (
-          aud.includes('ndma') || 
-          aud.includes('command') || 
-          aud.includes('control') || 
-          aud.includes('briefing') || 
-          subject.includes('briefing') || 
-          subject.includes('command core') || 
+          aud.includes('ndma') ||
+          aud.includes('command') ||
+          aud.includes('control') ||
+          aud.includes('briefing') ||
+          subject.includes('briefing') ||
+          subject.includes('command core') ||
           aud.includes('center')
         ) {
           normalizedAudience = 'ndma';
         } else if (
-          aud.includes('media') || 
-          aud.includes('press') || 
-          aud.includes('news') || 
-          aud.includes('utility') || 
-          aud.includes('power') || 
-          aud.includes('iesco') || 
-          subject.includes('press release') || 
-          subject.includes('statement') || 
+          aud.includes('media') ||
+          aud.includes('press') ||
+          aud.includes('news') ||
+          aud.includes('utility') ||
+          aud.includes('power') ||
+          aud.includes('iesco') ||
+          subject.includes('press release') ||
+          subject.includes('statement') ||
           subject.includes('infrastructure')
         ) {
           normalizedAudience = 'media';

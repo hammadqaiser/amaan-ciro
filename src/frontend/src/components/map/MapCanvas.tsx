@@ -53,113 +53,67 @@ export default function MapCanvas() {
     }
   }, [activeCrisis]);
 
-  // Dynamic active city and coordinates resolver
-  const activeCity = useMemo(() => {
-    const loc = activeCrisis?.location || userLocation;
-    if (!loc) return "Islamabad";
-    const lat = loc.lat || loc.latitude;
-    const lng = loc.lng || loc.longitude;
-    if (lat >= 24.0 && lat <= 26.0 && lng >= 66.0 && lng <= 68.0) return "Karachi";
-    if (lat >= 31.0 && lat <= 32.0 && lng >= 74.0 && lng <= 75.0) return "Lahore";
-    return "Islamabad";
-  }, [activeCrisis, userLocation]);
-
-  const activeCityCenter = useMemo(() => {
-    if (activeCity === "Karachi") return { lat: 24.8607, lng: 67.0011 };
-    if (activeCity === "Lahore") return { lat: 31.5204, lng: 74.3587 };
-    return { lat: 33.6844, lng: 73.0479 }; // Islamabad
-  }, [activeCity]);
-
-  // Dynamic Emergency Shelters based on activeCity
-  const EMERGENCY_SHELTERS = useMemo(() => {
-    const center = activeCityCenter;
-    if (activeCity === "Karachi") {
-      return [
-        { name: "Clifton Markaz Community Center", capacity: 400, occupied: 65, lat: center.lat + 0.005, lng: center.lng + 0.003, address: "Clifton, Karachi" },
-        { name: "Lyari Government High School", capacity: 300, occupied: 180, lat: center.lat - 0.008, lng: center.lng - 0.006, address: "Lyari, Karachi" },
-        { name: "Saddar Sports Stadium Hub", capacity: 600, occupied: 45, lat: center.lat + 0.004, lng: center.lng + 0.012, address: "Saddar, Karachi" }
-      ];
+  // Static Emergency Shelters
+  const EMERGENCY_SHELTERS = [
+    {
+      name: "G-10 Markaz Community Center",
+      capacity: 300,
+      occupied: 45,
+      lat: 33.7047,
+      lng: 73.0079,
+      address: "G-10 Markaz, Islamabad"
+    },
+    {
+      name: "I-8 Government School",
+      capacity: 200,
+      occupied: 120,
+      lat: 33.6923,
+      lng: 73.0612,
+      address: "I-8/2, Islamabad"
+    },
+    {
+      name: "Rawalpindi Sports Complex",
+      capacity: 500,
+      occupied: 15,
+      lat: 33.5651,
+      lng: 73.0169,
+      address: "Rawalpindi"
     }
-    if (activeCity === "Lahore") {
-      return [
-        { name: "Johar Town Markaz Community Center", capacity: 350, occupied: 50, lat: center.lat + 0.005, lng: center.lng + 0.003, address: "Johar Town, Lahore" },
-        { name: "Gulberg Government High School", capacity: 250, occupied: 150, lat: center.lat - 0.008, lng: center.lng - 0.006, address: "Gulberg, Lahore" },
-        { name: "Model Town Sports Stadium Hub", capacity: 500, occupied: 25, lat: center.lat + 0.004, lng: center.lng + 0.012, address: "Model Town, Lahore" }
-      ];
-    }
-    return [
-      { name: "G-10 Markaz Community Center", capacity: 300, occupied: 45, lat: 33.7047, lng: 73.0079, address: "G-10 Markaz, Islamabad" },
-      { name: "I-8 Government School", capacity: 200, occupied: 120, lat: 33.6923, lng: 73.0612, address: "I-8/2, Islamabad" },
-      { name: "Rawalpindi Sports Complex", capacity: 500, occupied: 15, lat: 33.5651, lng: 73.0169, address: "Rawalpindi" }
-    ];
-  }, [activeCity, activeCityCenter]);
+  ];
 
-  // Dynamic Sector Vulnerabilities based on activeCity
-  const SECTOR_VULNERABILITIES = useMemo(() => {
-    const center = activeCityCenter;
-    if (activeCity === "Karachi") {
-      return [
-        { name: "Clifton", lat: center.lat + 0.002, lng: center.lng - 0.003, score: 0.25 },
-        { name: "Lyari", lat: center.lat - 0.005, lng: center.lng + 0.004, score: 0.85 },
-        { name: "Gulshan", lat: center.lat + 0.015, lng: center.lng + 0.018, score: 0.72 },
-        { name: "Saddar", lat: center.lat - 0.002, lng: center.lng - 0.001, score: 0.60 }
-      ];
-    }
-    if (activeCity === "Lahore") {
-      return [
-        { name: "Johar Town", lat: center.lat + 0.002, lng: center.lng - 0.003, score: 0.85 },
-        { name: "Gulberg", lat: center.lat - 0.005, lng: center.lng + 0.004, score: 0.25 },
-        { name: "DHA", lat: center.lat + 0.015, lng: center.lng + 0.018, score: 0.30 },
-        { name: "Model Town", lat: center.lat - 0.002, lng: center.lng - 0.001, score: 0.60 }
-      ];
-    }
-    return [
-      { name: "G-10", lat: 33.7047, lng: 73.0079, score: 0.85 },
-      { name: "G-11", lat: 33.6844, lng: 72.9900, score: 0.80 },
-      { name: "G-13", lat: 33.6550, lng: 72.9650, score: 0.78 },
-      { name: "I-8",  lat: 33.6923, lng: 73.0612, score: 0.60 },
-      { name: "I-10", lat: 33.6450, lng: 73.0350, score: 0.72 },
-      { name: "F-6",  lat: 33.7294, lng: 73.0840, score: 0.30 },
-      { name: "F-7",  lat: 33.7190, lng: 73.0550, score: 0.25 }
-    ];
-  }, [activeCity, activeCityCenter]);
+  // Static Sector Vulnerabilities based on NDMA static database
+  const SECTOR_VULNERABILITIES = [
+    { name: "G-10", lat: 33.7047, lng: 73.0079, score: 0.85 },
+    { name: "G-11", lat: 33.6844, lng: 72.9900, score: 0.80 },
+    { name: "G-13", lat: 33.6550, lng: 72.9650, score: 0.78 },
+    { name: "I-8",  lat: 33.6923, lng: 73.0612, score: 0.60 },
+    { name: "I-10", lat: 33.6450, lng: 73.0350, score: 0.72 },
+    { name: "F-6",  lat: 33.7294, lng: 73.0840, score: 0.30 },
+    { name: "F-7",  lat: 33.7190, lng: 73.0550, score: 0.25 }
+  ];
 
-  // Dynamic starting coordinates for fleet stations relative to activeCity center
-  const DISPATCH_STARTING_COORDS = useMemo(() => {
-    const center = activeCityCenter;
-    return {
-      "AMB-01": { lat: center.lat + 0.015, lng: center.lng + 0.010 },
-      "AMB-02": { lat: center.lat - 0.010, lng: center.lng + 0.018 },
-      "AMB-03": { lat: center.lat + 0.025, lng: center.lng - 0.015 },
-      "AMB-04": { lat: center.lat - 0.018, lng: center.lng - 0.022 },
-      "BOAT-01": { lat: center.lat + 0.008, lng: center.lng + 0.020 },
-      "BOAT-02": { lat: center.lat - 0.015, lng: center.lng - 0.008 },
-      "TEAM-01": { lat: center.lat + 0.018, lng: center.lng - 0.008 },
-      "TEAM-02": { lat: center.lat - 0.008, lng: center.lng + 0.008 },
-      "TEAM-03": { lat: center.lat + 0.008, lng: center.lng - 0.015 }
-    };
-  }, [activeCityCenter]);
+  // Tactical resource starting coordinates for base telemetry mapping
+  const DISPATCH_STARTING_COORDS: Record<string, { lat: number, lng: number }> = {
+    "AMB-01": { lat: 33.7215, lng: 73.0433 },
+    "AMB-02": { lat: 33.6938, lng: 73.0651 },
+    "AMB-03": { lat: 33.7394, lng: 73.0840 },
+    "AMB-04": { lat: 33.6745, lng: 72.9836 },
+    "BOAT-01": { lat: 33.7200, lng: 73.0500 },
+    "BOAT-02": { lat: 33.6900, lng: 73.0700 },
+    "TEAM-01": { lat: 33.7100, lng: 73.0600 },
+    "TEAM-02": { lat: 33.7300, lng: 73.0400 },
+    "TEAM-03": { lat: 33.6800, lng: 73.0900 }
+  };
 
   // Detailed Sector Metadata Lookup
   const SECTOR_DETAILS: Record<string, any> = {
-    // Islamabad
     "G-10": { vulnerability: 0.85, drainage: "12 mm/hr", density: "8,500 / km²", lowIncome: "No", historical: 7, area: "4.2 km²" },
     "G-11": { vulnerability: 0.80, drainage: "13 mm/hr", density: "7,800 / km²", lowIncome: "No", historical: 5, area: "4.5 km²" },
     "G-13": { vulnerability: 0.78, drainage: "14 mm/hr", density: "7,100 / km²", lowIncome: "No", historical: 5, area: "5.0 km²" },
     "I-8":  { vulnerability: 0.60, drainage: "18 mm/hr", density: "6,200 / km²", lowIncome: "Yes (Priority)", historical: 3, area: "3.8 km²" },
     "I-10": { vulnerability: 0.72, drainage: "15 mm/hr", density: "9,100 / km²", lowIncome: "Yes (Priority)", historical: 6, area: "4.1 km²" },
     "F-6":  { vulnerability: 0.30, drainage: "28 mm/hr", density: "3,200 / km²", lowIncome: "No", historical: 1, area: "6.0 km²" },
-    "F-7":  { vulnerability: 0.25, drainage: "30 mm/hr", density: "2,800 / km²", lowIncome: "No", historical: 0, area: "5.5 km²" },
-    // Karachi
-    "Clifton": { vulnerability: 0.25, drainage: "30 mm/hr", density: "5,400 / km²", lowIncome: "No", historical: 1, area: "5.8 km²" },
-    "Lyari": { vulnerability: 0.85, drainage: "10 mm/hr", density: "22,000 / km²", lowIncome: "Yes (Priority)", historical: 8, area: "3.2 km²" },
-    "Gulshan": { vulnerability: 0.72, drainage: "14 mm/hr", density: "14,500 / km²", lowIncome: "No", historical: 4, area: "6.5 km²" },
-    "Saddar": { vulnerability: 0.60, drainage: "16 mm/hr", density: "18,200 / km²", lowIncome: "Yes (Priority)", historical: 5, area: "4.8 km²" },
-    // Lahore
-    "Johar Town": { vulnerability: 0.85, drainage: "12 mm/hr", density: "9,200 / km²", lowIncome: "No", historical: 6, area: "5.1 km²" },
-    "Gulberg": { vulnerability: 0.25, drainage: "28 mm/hr", density: "6,500 / km²", lowIncome: "No", historical: 1, area: "4.7 km²" },
-    "DHA": { vulnerability: 0.30, drainage: "26 mm/hr", density: "4,100 / km²", lowIncome: "No", historical: 1, area: "8.2 km²" },
-    "Model Town": { vulnerability: 0.60, drainage: "18 mm/hr", density: "8,800 / km²", lowIncome: "Yes (Priority)", historical: 2, area: "5.5 km²" }
+    "F-7":  { vulnerability: 0.25, drainage: "30 mm/hr", density: "2,800 / km²", lowIncome: "No", historical: 0, area: "5.5 km²" }
   };
 
   // Generate GeoJSON Circles for all Crisis Zones
@@ -385,10 +339,7 @@ export default function MapCanvas() {
         dragPan={true}
         scrollZoom={{ ctrlToZoom: true }}
         doubleClickZoom={true}
-        onClick={(evt) => {
-          const { lng, lat } = evt.lngLat;
-          useCiroStore.getState().setLocation(lat, lng);
-        }}
+        interactive={true}
         reuseMaps
       >
         <LayersPanel />

@@ -15,21 +15,21 @@ import AlertsPanel from './components/layout/AlertsPanel'
 import StreamDockPanel from './components/layout/StreamDockPanel'
 import LiveStatusTicker from './components/layout/LiveStatusTicker'
 import { useCiroStore } from './store/useCiroStore'
-import { 
-  Navigation, 
-  LayoutGrid, 
-  Radio, 
-  ShieldAlert, 
-  Cpu, 
-  Tv, 
-  Map as MapIcon, 
-  Bell, 
-  MessageSquare, 
-  Settings, 
+import {
+  Navigation,
+  LayoutGrid,
+  Radio,
+  ShieldAlert,
+  Cpu,
+  Tv,
+  Map as MapIcon,
+  Bell,
+  MessageSquare,
+  Settings,
   Wifi,
   WifiOff,
-  Sliders, 
-  Play, 
+  Sliders,
+  Play,
   Info,
   Activity,
   Flame,
@@ -130,7 +130,7 @@ function App() {
 
   // Resolve Lucide icons for Comms bubbles
   const getAudienceIcon = (aud: string) => {
-    switch(aud) {
+    switch (aud) {
       case 'ndma': return <Award className="w-5 h-5 text-emerald-400" />;
       case 'emergency_services': return <Flame className="w-5 h-5 text-red-400" />;
       case 'hospitals': return <Activity className="w-5 h-5 text-blue-400" />;
@@ -144,7 +144,7 @@ function App() {
   if (isMobile) {
     return (
       <div id="amaan-mobile-command-center" className="h-screen w-full flex flex-col bg-[#020202] text-gray-200 font-mono overflow-hidden">
-        
+
         {/* MOBILE HEADER */}
         <header className="h-14 bg-[#0a0a0a] border-b border-[#1f1f1f] flex items-center justify-between px-4 z-40 shrink-0 select-none">
           <div className="flex items-center gap-2">
@@ -155,13 +155,12 @@ function App() {
           </div>
 
           <div className="flex items-center gap-2">
-            <div 
+            <div
               onClick={() => setMobileTab('settings')}
-              className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-[8px] font-bold cursor-pointer transition-all ${
-                localStorage.getItem('ciro_server_url') 
-                  ? 'bg-emerald-950/20 text-emerald-400 border-emerald-900/40' 
+              className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-[8px] font-bold cursor-pointer transition-all ${localStorage.getItem('ciro_server_url')
+                  ? 'bg-emerald-950/20 text-emerald-400 border-emerald-900/40'
                   : 'bg-[#111] text-gray-400 border-[#222]'
-              }`}
+                }`}
             >
               {localStorage.getItem('ciro_server_url') ? (
                 <>
@@ -176,13 +175,12 @@ function App() {
               )}
             </div>
 
-            <button 
+            <button
               onClick={() => setMobileTab('settings')}
-              className={`p-1.5 rounded border transition-all cursor-pointer ${
-                mobileTab === 'settings' 
-                  ? 'bg-emerald-950/30 text-emerald-400 border-emerald-500/35 shadow-[0_0_8px_rgba(16,185,129,0.2)]' 
+              className={`p-1.5 rounded border transition-all cursor-pointer ${mobileTab === 'settings'
+                  ? 'bg-emerald-950/30 text-emerald-400 border-emerald-500/35 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
                   : 'bg-[#111] text-gray-400 border-[#222] hover:text-gray-200'
-              }`}
+                }`}
               title="System Control & Comms Settings"
             >
               <Settings className="w-3.5 h-3.5" />
@@ -201,11 +199,11 @@ function App() {
 
         {/* MOBILE CONTENT CONTAINER (Strictly bounds the height to prevent scrolling outside layout) */}
         <main className="flex-1 w-full overflow-hidden relative">
-          
+
           {/* TAB 1: SYSTEM OVERVIEW (PREMIUM LANDING PAGE) */}
           {mobileTab === 'overview' && (
             <div className="w-full h-full overflow-y-auto px-4 py-4 space-y-6 pb-24 custom-scrollbar bg-[#020202]">
-              
+
               {/* Compact Mobile Time Ticker */}
               <MobileTimeTicker />
 
@@ -218,7 +216,7 @@ function App() {
                     <Activity className="w-5.5 h-5.5 text-emerald-400 animate-pulse" />
                   </div>
                 </div>
-                
+
                 <h2 className="text-lg font-black tracking-widest text-white uppercase font-mono">AMAAN CIRO</h2>
                 <p className="text-[8px] font-extrabold text-emerald-400 uppercase tracking-widest mt-1">Crisis Intelligence & Response Orchestrator</p>
                 <div className="w-12 h-[1px] bg-emerald-800/60 my-2.5"></div>
@@ -249,14 +247,14 @@ function App() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-2.5">
-                  
+
                   {/* Option 1: Live Ingestion */}
                   <div className="bg-[#070707] border border-[#1f1f1f] hover:border-emerald-500/30 rounded p-3 flex justify-between items-center transition-all shadow-md">
                     <div className="space-y-0.5 max-w-[70%]">
                       <h4 className="text-[10px] font-black text-emerald-400 uppercase tracking-wider font-bold">📡 Run Live Scenario</h4>
                       <p className="text-[8.5px] text-gray-400 leading-tight">Fetch real-time meteorological rainfall indexes, traffic sensors, and GDELT alerts.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/pipeline/run');
                         setMobileTab('map');
@@ -274,7 +272,7 @@ function App() {
                       <h4 className="text-[10px] font-black text-blue-400 uppercase tracking-wider font-bold">🌊 Scripted Scenario A</h4>
                       <p className="text-[8.5px] text-gray-400 leading-tight">Islamabad flooding response: deploys 4 rescue teams and manages a concurrent heat emergency.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-a-v2');
                         setMobileTab('map');
@@ -292,7 +290,7 @@ function App() {
                       <h4 className="text-[10px] font-black text-amber-400 uppercase tracking-wider font-bold">⚠️ Scripted Scenario B</h4>
                       <p className="text-[8.5px] text-gray-400 leading-tight">Low-confidence flood ping: verifies utility water main burst and automatically retracts incident logs.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-b');
                         setMobileTab('map');
@@ -310,7 +308,7 @@ function App() {
                       <h4 className="text-[10px] font-black text-red-400 uppercase tracking-wider font-bold">💥 Scripted Scenario C</h4>
                       <p className="text-[8.5px] text-gray-400 leading-tight">Simultaneous G-10 flood and I-8 heatwave: triggers resource trade-offs and dynamic fleet allocations.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-c');
                         setMobileTab('map');
@@ -348,7 +346,7 @@ function App() {
                   <span>Tactical Fleet Inventory</span>
                   <span className="text-emerald-500 text-[8px] font-extrabold uppercase animate-pulse">Active</span>
                 </h3>
-                
+
                 <div className="grid grid-cols-1 gap-2.5 text-center text-[10px]">
                   <div className="bg-[#030303] border border-[#1f1f1f] p-3 rounded flex items-center justify-between px-4">
                     <span className="text-[8px] text-gray-500 uppercase tracking-wider block">AMBULANCES</span>
@@ -367,7 +365,7 @@ function App() {
                     <strong className="text-white text-xs block">7 / 10 AVAIL</strong>
                   </div>
                 </div>
-                
+
                 <div className="text-[8px] text-gray-500 mt-2.5 text-center">
                   *Assets dynamically routed on scenario initialization via live coordinate logic
                 </div>
@@ -427,7 +425,7 @@ function App() {
 
               {/* Floating Scenario Trigger overlay */}
               <div className="absolute top-4 right-4 z-10 flex flex-col items-end">
-                <button 
+                <button
                   onClick={() => setIsScenarioDropdownOpen(!isScenarioDropdownOpen)}
                   className="px-3 py-2 bg-emerald-500/90 text-black border border-emerald-400 rounded-md text-[9px] font-extrabold tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] flex items-center gap-1.5 cursor-pointer active:scale-95 animate-pulse"
                 >
@@ -437,7 +435,7 @@ function App() {
 
                 {isScenarioDropdownOpen && (
                   <div className="mt-2 bg-[#0a0a0a]/95 backdrop-blur border border-[#1f1f1f] rounded shadow-2xl p-2 w-48 flex flex-col gap-1.5 animate-fade-in-down font-mono z-50">
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/pipeline/run');
                         setIsScenarioDropdownOpen(false);
@@ -447,7 +445,7 @@ function App() {
                     >
                       📡 RUN LIVE SCENARIO
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-a-v2');
                         setIsScenarioDropdownOpen(false);
@@ -457,7 +455,7 @@ function App() {
                     >
                       🌊 SCRIPTED SCENARIO A
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-b');
                         setIsScenarioDropdownOpen(false);
@@ -467,7 +465,7 @@ function App() {
                     >
                       ⚠️ SCRIPTED SCENARIO B
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-c');
                         setIsScenarioDropdownOpen(false);
@@ -486,7 +484,7 @@ function App() {
           {/* TAB 3: INGESTED ALERTS FEED */}
           {mobileTab === 'alerts' && (
             <div className="w-full h-full overflow-y-auto px-4 py-4 space-y-5 custom-scrollbar pb-24 bg-[#020202]">
-              
+
               {/* News ticker */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 px-1">
@@ -515,56 +513,51 @@ function App() {
           {/* TAB 4: STAKEHOLDER CONVERSATION CHANNELS (LARGE GRAPHICS & MASSIVE READABILITY) */}
           {mobileTab === 'comms' && (
             <div className="w-full h-full flex flex-col overflow-hidden bg-[#020202]">
-              
+
               {/* Agency Tabs Selectors */}
               <div className="flex bg-[#070707] border-b border-[#1a1a1a] overflow-x-auto shrink-0 select-none custom-scrollbar py-2.5 px-3 gap-1.5">
-                <button 
+                <button
                   onClick={() => setCommsAudience('ndma')}
-                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${
-                    commsAudience === 'ndma'
+                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${commsAudience === 'ndma'
                       ? 'bg-emerald-950/20 text-emerald-400 border-emerald-500/40 shadow-lg'
                       : 'bg-[#0f0f0f] text-gray-500 border-[#222]'
-                  }`}
+                    }`}
                 >
                   NDMA
                 </button>
-                <button 
+                <button
                   onClick={() => setCommsAudience('emergency_services')}
-                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${
-                    commsAudience === 'emergency_services'
+                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${commsAudience === 'emergency_services'
                       ? 'bg-red-950/20 text-red-400 border-red-500/40 shadow-lg'
                       : 'bg-[#0f0f0f] text-gray-500 border-[#222]'
-                  }`}
+                    }`}
                 >
                   Rescue 1122
                 </button>
-                <button 
+                <button
                   onClick={() => setCommsAudience('hospitals')}
-                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${
-                    commsAudience === 'hospitals'
+                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${commsAudience === 'hospitals'
                       ? 'bg-blue-950/20 text-blue-400 border-blue-500/40 shadow-lg'
                       : 'bg-[#0f0f0f] text-gray-500 border-[#222]'
-                  }`}
+                    }`}
                 >
                   Hospitals
                 </button>
-                <button 
+                <button
                   onClick={() => setCommsAudience('public')}
-                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${
-                    commsAudience === 'public'
+                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${commsAudience === 'public'
                       ? 'bg-amber-950/20 text-amber-400 border-amber-500/40 shadow-lg'
                       : 'bg-[#0f0f0f] text-gray-500 border-[#222]'
-                  }`}
+                    }`}
                 >
                   Public Alert
                 </button>
-                <button 
+                <button
                   onClick={() => setCommsAudience('media')}
-                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${
-                    commsAudience === 'media'
+                  className={`px-3.5 py-1.5 border rounded-full text-[9px] uppercase tracking-wider font-bold transition-all shrink-0 cursor-pointer ${commsAudience === 'media'
                       ? 'bg-purple-950/20 text-purple-400 border-purple-500/40 shadow-lg'
                       : 'bg-[#0f0f0f] text-gray-500 border-[#222]'
-                  }`}
+                    }`}
                 >
                   Press Desk
                 </button>
@@ -575,7 +568,7 @@ function App() {
                 <div className="text-center py-2 text-[9px] text-gray-500 font-extrabold uppercase tracking-widest border-b border-[#1a1a1a]/30 mb-3">
                   🔐 SECURED CRYPTO-CHANNEL: {commsAudience.toUpperCase()}
                 </div>
-                
+
                 {allAlerts.filter(msg => msg.audience === commsAudience).length === 0 ? (
                   <div className="h-56 flex flex-col items-center justify-center text-center p-6 border border-dashed border-[#1f1f1f] rounded-lg">
                     <Radio className="w-10 h-10 text-gray-600 animate-pulse mb-3" />
@@ -586,7 +579,7 @@ function App() {
                   allAlerts.filter(msg => msg.audience === commsAudience).map((alert, idx) => (
                     <div key={idx} className="flex flex-col gap-3 animate-fade-in-up mb-6 border border-[#222]/80 bg-[#060606] rounded-xl p-5 shadow-2xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
-                      
+
                       <div className="flex items-center gap-3 border-b border-[#1f1f1f] pb-3 mb-2">
                         <div className="w-12 h-12 rounded-full bg-[#111] border border-[#333] flex items-center justify-center shrink-0 shadow-lg">
                           {getAudienceIcon(commsAudience)}
@@ -594,7 +587,7 @@ function App() {
                         <div className="flex-1 min-w-0">
                           <span className="text-lg font-black text-white uppercase block truncate tracking-wide font-mono">{alert.subject}</span>
                           <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-0.5 block">
-                            Sent at: {new Date(alert.sent_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            Sent at: {new Date(alert.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>
                       </div>
@@ -602,14 +595,13 @@ function App() {
                       <div className="py-2">
                         <p className="text-[15px] sm:text-[16px] text-gray-100 leading-relaxed whitespace-pre-line font-mono font-semibold">{alert.body}</p>
                       </div>
-                      
+
                       <div className="flex justify-between items-center mt-3 border-t border-[#1f1f1f] pt-3 text-[10px] text-gray-500 font-mono">
                         <span className="font-bold">CHANNEL: <span className="text-gray-300 font-normal">{alert.channel.toUpperCase()}</span></span>
-                        <span className={`px-2.5 py-1 rounded-full font-black text-[9px] tracking-widest ${
-                          alert.urgency_level.toLowerCase() === 'critical' ? 'bg-red-950/40 text-red-400 border border-red-500/20 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 
-                          alert.urgency_level.toLowerCase() === 'severe' ? 'bg-amber-950/40 text-amber-400 border border-amber-500/20 shadow-[0_0_8px_rgba(245,158,11,0.2)]' : 
-                          'bg-emerald-950/40 text-emerald-400 border border-emerald-500/20 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
-                        }`}>
+                        <span className={`px-2.5 py-1 rounded-full font-black text-[9px] tracking-widest ${alert.urgency_level.toLowerCase() === 'critical' ? 'bg-red-950/40 text-red-400 border border-red-500/20 shadow-[0_0_8px_rgba(239,68,68,0.2)]' :
+                            alert.urgency_level.toLowerCase() === 'severe' ? 'bg-amber-950/40 text-amber-400 border border-amber-500/20 shadow-[0_0_8px_rgba(245,158,11,0.2)]' :
+                              'bg-emerald-950/40 text-emerald-400 border border-emerald-500/20 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
+                          }`}>
                           {alert.urgency_level.toUpperCase()}
                         </span>
                       </div>
@@ -630,7 +622,7 @@ function App() {
           {/* TAB 6: SETTINGS & BRAND PRESENTATION */}
           {mobileTab === 'settings' && (
             <div className="w-full h-full overflow-y-auto px-4 py-4 space-y-6 pb-24 custom-scrollbar bg-[#020202]">
-              
+
               {/* 1. DYNAMIC SERVER LINKAGE DOCK */}
               <div className="bg-[#070707] border border-[#1f1f1f] rounded p-4 shadow-xl">
                 <div className="flex items-center gap-2 border-b border-[#1a1a1a] pb-2 mb-3">
@@ -645,8 +637,8 @@ function App() {
                 <div className="space-y-3">
                   <div>
                     <label className="text-[8px] font-bold text-gray-500 uppercase block mb-1">Server API Base Address</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={serverUrlInput}
                       onChange={(e) => setServerUrlInput(e.target.value)}
                       placeholder="e.g. http://192.168.1.100:8080/api"
@@ -658,7 +650,7 @@ function App() {
                     <span>ACTIVE LINK: {getActiveServer()}</span>
                   </div>
 
-                  <button 
+                  <button
                     onClick={saveServerUrl}
                     className="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-black border border-emerald-400 font-extrabold uppercase text-[9px] tracking-widest rounded transition-all cursor-pointer active:scale-95"
                   >
@@ -683,21 +675,21 @@ function App() {
 
                 <div className="space-y-3.5 text-gray-300 text-[9px] leading-relaxed">
                   <p>
-                    Pakistan loses billions of rupees and hundreds of lives annually to preventable crisis mismanagement. 
-                    The historical <strong>Karachi & Islamabad Monsoon Floods</strong> resulted in massive casualties and structural damages — 
-                    not because the storms were unpredicted, but because response teams were completely 
+                    Pakistan loses billions of rupees and hundreds of lives annually to preventable crisis mismanagement.
+                    The historical <strong>Karachi & Islamabad Monsoon Floods</strong> resulted in massive casualties and structural damages —
+                    not because the storms were unpredicted, but because response teams were completely
                     <em> blind, reactive, and slow</em>.
                   </p>
-                  
+
                   <p>
-                    Emergency services received information from disjointed, conflicting channels. Operations operators 
-                    had no intelligent central core to tell them where to deploy, which reports to trust, 
+                    Emergency services received information from disjointed, conflicting channels. Operations operators
+                    had no intelligent central core to tell them where to deploy, which reports to trust,
                     and how to coordinate limited resources between multiple concurrent emergencies.
                   </p>
 
                   <div className="border-l-2 border-amber-500 pl-2.5 py-1 text-gray-400 italic text-[8px] bg-amber-950/5">
-                    "Amaan isn't just a basic status dashboard that reports past catastrophes. Amaan is an autonomous 
-                    intelligence engine that decides optimal response vectors, predicted durations, and dispatch plans — 
+                    "Amaan isn't just a basic status dashboard that reports past catastrophes. Amaan is an autonomous
+                    intelligence engine that decides optimal response vectors, predicted durations, and dispatch plans —
                     resolving conflicting field pings in seconds."
                   </div>
 
@@ -734,31 +726,28 @@ function App() {
 
         {/* STICKY BOTTOM TAB NAVIGATION BAR */}
         <nav className="h-16 bg-[#0a0a0a] border-t border-[#1f1f1f] flex items-center justify-around px-2 z-40 shrink-0 select-none shadow-[0_-5px_15px_rgba(0,0,0,0.6)]">
-          <button 
+          <button
             onClick={() => setMobileTab('overview')}
-            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${
-              mobileTab === 'overview' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
-            }`}
+            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${mobileTab === 'overview' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
+              }`}
           >
             <LayoutGrid className="w-5.5 h-5.5" />
             <span className="text-[8px] font-bold uppercase tracking-wider font-mono">Overview</span>
           </button>
 
-          <button 
+          <button
             onClick={() => setMobileTab('map')}
-            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${
-              mobileTab === 'map' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
-            }`}
+            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${mobileTab === 'map' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
+              }`}
           >
             <MapIcon className="w-5.5 h-5.5" />
             <span className="text-[8px] font-bold uppercase tracking-wider font-mono">Map View</span>
           </button>
 
-          <button 
+          <button
             onClick={() => setMobileTab('alerts')}
-            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${
-              mobileTab === 'alerts' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
-            }`}
+            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${mobileTab === 'alerts' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
+              }`}
           >
             <div className="relative">
               <Bell className="w-5.5 h-5.5" />
@@ -769,21 +758,19 @@ function App() {
             <span className="text-[8px] font-bold uppercase tracking-wider font-mono">Telemetry</span>
           </button>
 
-          <button 
+          <button
             onClick={() => setMobileTab('comms')}
-            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${
-              mobileTab === 'comms' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
-            }`}
+            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${mobileTab === 'comms' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
+              }`}
           >
             <MessageSquare className="w-5.5 h-5.5" />
             <span className="text-[8px] font-bold uppercase tracking-wider font-mono">Comms ({allAlerts.length})</span>
           </button>
 
-          <button 
+          <button
             onClick={() => setMobileTab('chat')}
-            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${
-              mobileTab === 'chat' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
-            }`}
+            className={`flex flex-col items-center justify-center gap-1 w-16 transition-colors cursor-pointer ${mobileTab === 'chat' ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
+              }`}
           >
             <Cpu className="w-5.5 h-5.5" />
             <span className="text-[8px] font-bold uppercase tracking-wider font-mono">Chat</span>
@@ -791,9 +778,9 @@ function App() {
         </nav>
 
         {/* Mobile floating overlay disabled to prevent map overlapping */}
-        </div>
-      )
-    }
+      </div>
+    )
+  }
 
   // Desktop Render Flow (Preserves all existing premium configurations)
   return (
@@ -808,7 +795,7 @@ function App() {
           <Navigation className="w-4 h-4 text-emerald-400 shrink-0" />
           <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider font-mono">CIRO Tactical Console</span>
           <span className="text-gray-700">|</span>
-          <select 
+          <select
             onChange={(e) => setActiveTab(e.target.value as any)}
             value={activeTab}
             className="bg-[#0c0c0c] border border-[#222] text-gray-300 px-2 py-1 rounded text-[10px] uppercase tracking-wider font-bold focus:outline-none focus:border-emerald-500/50 cursor-pointer"
@@ -823,73 +810,67 @@ function App() {
         </div>
 
         <div className="flex gap-1.5 overflow-x-auto max-w-full custom-scrollbar py-0.5 select-none">
-          <button 
+          <button
             onClick={() => setActiveTab('overview')}
-            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'overview' 
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)]' 
+            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'overview'
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)]'
                 : 'bg-[#0c0c0c] text-gray-500 border-[#222] hover:text-gray-300 hover:border-[#333]'
-            }`}
+              }`}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
             Overview
           </button>
-          
-          <button 
+
+          <button
             onClick={() => setActiveTab('map')}
-            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'map' 
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)]' 
+            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'map'
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)]'
                 : 'bg-[#0c0c0c] text-gray-500 border-[#222] hover:text-gray-300 hover:border-[#333]'
-            }`}
+              }`}
           >
             <MapIcon className="w-3.5 h-3.5" />
             Map View
           </button>
 
-          <button 
+          <button
             onClick={() => setActiveTab('broadcasts')}
-            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'broadcasts' 
-                ? 'bg-red-500/10 text-red-400 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.15)]' 
+            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'broadcasts'
+                ? 'bg-red-500/10 text-red-400 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.15)]'
                 : 'bg-[#0c0c0c] text-gray-500 border-[#222] hover:text-gray-300 hover:border-[#333]'
-            }`}
+              }`}
           >
             <Radio className="w-3.5 h-3.5" />
             Broadcasts ({newsFeeds.length})
           </button>
 
-          <button 
+          <button
             onClick={() => setActiveTab('alerts')}
-            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'alerts' 
-                ? 'bg-amber-500/10 text-amber-400 border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.15)]' 
+            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'alerts'
+                ? 'bg-amber-500/10 text-amber-400 border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.15)]'
                 : 'bg-[#0c0c0c] text-gray-500 border-[#222] hover:text-gray-300 hover:border-[#333]'
-            }`}
+              }`}
           >
             <ShieldAlert className="w-3.5 h-3.5" />
             Stakeholders ({allAlerts.length})
           </button>
 
-          <button 
+          <button
             onClick={() => setActiveTab('operations')}
-            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'operations' 
-                ? 'bg-blue-500/10 text-blue-400 border-blue-500/40 shadow-[0_0_10px_rgba(59,130,246,0.15)]' 
+            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'operations'
+                ? 'bg-blue-500/10 text-blue-400 border-blue-500/40 shadow-[0_0_10px_rgba(59,130,246,0.15)]'
                 : 'bg-[#0c0c0c] text-gray-500 border-[#222] hover:text-gray-300 hover:border-[#333]'
-            }`}
+              }`}
           >
             <Cpu className="w-3.5 h-3.5" />
             Operations
           </button>
 
-          <button 
+          <button
             onClick={() => setActiveTab('settings')}
-            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'settings' 
-                ? 'bg-purple-500/10 text-purple-400 border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.15)]' 
+            className={`px-3 py-1.5 border rounded text-[9px] uppercase tracking-widest font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'settings'
+                ? 'bg-purple-500/10 text-purple-400 border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.15)]'
                 : 'bg-[#0c0c0c] text-gray-500 border-[#222] hover:text-gray-300 hover:border-[#333]'
-            }`}
+              }`}
           >
             <Settings className="w-3.5 h-3.5" />
             Settings
@@ -898,27 +879,27 @@ function App() {
       </div>
 
       <div className="flex-1 max-w-[1600px] w-full mx-auto px-6 py-8 flex flex-col gap-8">
-        
+
         {/* TAB 1: SYSTEM OVERVIEW (PREMIUM LANDING PAGE) */}
         {activeTab === 'overview' && (
           <div className="flex flex-col gap-8 w-full animate-fade-in-up font-mono">
             {/* ROW 1: Interactive map with float control */}
             <div className="h-[55vh] min-h-[450px] w-full relative border border-[#1f1f1f] rounded-lg overflow-hidden shadow-2xl shrink-0">
               <MapCanvas />
-              
+
               {/* Floating Scenario Trigger overlay on map */}
               <div className="absolute top-4 right-4 z-10 flex flex-col items-end select-none">
-                <button 
+                <button
                   onClick={() => setIsScenarioDropdownOpen(!isScenarioDropdownOpen)}
                   className="px-4 py-2.5 bg-emerald-500/90 hover:bg-emerald-500 text-black border border-emerald-400 rounded-md text-[10px] font-extrabold tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-2 cursor-pointer active:scale-95 animate-pulse"
                 >
                   <Play className="w-3.5 h-3.5 fill-black text-black" />
                   RUN SCENARIOS
                 </button>
-                
+
                 {isScenarioDropdownOpen && (
                   <div className="mt-2 bg-[#0a0a0a]/95 backdrop-blur border border-[#1f1f1f] rounded shadow-2xl p-2.5 w-52 flex flex-col gap-2 animate-fade-in-down font-mono z-50">
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/pipeline/run');
                         setIsScenarioDropdownOpen(false);
@@ -928,7 +909,7 @@ function App() {
                     >
                       📡 RUN LIVE SCENARIO
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-a-v2');
                         setIsScenarioDropdownOpen(false);
@@ -938,7 +919,7 @@ function App() {
                     >
                       🌊 SCRIPTED SCENARIO A
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-b');
                         setIsScenarioDropdownOpen(false);
@@ -948,7 +929,7 @@ function App() {
                     >
                       ⚠️ SCRIPTED SCENARIO B
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         triggerPipelineRun('/demo/scenario-c');
                         setIsScenarioDropdownOpen(false);
@@ -972,7 +953,7 @@ function App() {
                   <Activity className="w-6 h-6 text-emerald-400 animate-pulse" />
                 </div>
               </div>
-              
+
               <h2 className="text-2xl font-black tracking-widest text-white uppercase font-mono">AMAAN CIRO</h2>
               <p className="text-xs font-extrabold text-emerald-400 uppercase tracking-widest mt-1">Crisis Intelligence & Response Orchestrator</p>
               <div className="w-20 h-[1px] bg-emerald-800/60 my-4"></div>
@@ -987,7 +968,7 @@ function App() {
                 <span className="w-1.5 h-4.5 bg-red-500 rounded-sm"></span>
                 <h3 className="text-xs uppercase font-bold text-gray-200 tracking-wider">📺 Satellite Broadcast News Live Feed</h3>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
                 <div className="col-span-1 min-h-[300px]">
                   <NewsIframe index={0} title="GEO NEWS LIVE SATELLITE FEED" />
@@ -1012,14 +993,14 @@ function App() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
+
                 {/* Option 1: Live Ingestion */}
                 <div className="bg-[#030303] border border-[#1f1f1f] hover:border-emerald-500/30 rounded p-4 flex justify-between items-center transition-all shadow-md">
                   <div className="space-y-1 max-w-[75%]">
                     <h4 className="text-xs font-black text-emerald-400 uppercase tracking-wider font-bold">📡 Run Live Scenario</h4>
                     <p className="text-[10px] text-gray-400 leading-normal">Fetch real-time meteorological rainfall indexes, traffic sensors, and GDELT alerts.</p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/pipeline/run');
                       setActiveTab('map');
@@ -1037,7 +1018,7 @@ function App() {
                     <h4 className="text-xs font-black text-blue-400 uppercase tracking-wider font-bold">🌊 Scripted Scenario A</h4>
                     <p className="text-[10px] text-gray-400 leading-normal">Islamabad flooding response: deploys 4 rescue teams and manages a concurrent heat emergency.</p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/demo/scenario-a-v2');
                       setActiveTab('map');
@@ -1055,7 +1036,7 @@ function App() {
                     <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider font-bold">⚠️ Scripted Scenario B</h4>
                     <p className="text-[10px] text-gray-400 leading-normal">Low-confidence flood ping: verifies utility water main burst and automatically retracts incident logs.</p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/demo/scenario-b');
                       setActiveTab('map');
@@ -1073,7 +1054,7 @@ function App() {
                     <h4 className="text-xs font-black text-red-400 uppercase tracking-wider font-bold">💥 Scripted Scenario C</h4>
                     <p className="text-[10px] text-gray-400 leading-normal">Simultaneous G-10 flood and I-8 heatwave: triggers resource trade-offs and dynamic fleet allocations.</p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/demo/scenario-c');
                       setActiveTab('map');
@@ -1100,7 +1081,7 @@ function App() {
                 <span>Tactical Fleet Inventory Panel</span>
                 <span className="text-emerald-500 text-[10px] font-extrabold uppercase animate-pulse">Active</span>
               </h3>
-              
+
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center text-sm">
                 <div className="bg-[#030303] border border-[#1f1f1f] p-4 rounded">
                   <span className="text-[10px] text-gray-500 uppercase tracking-wider block">AMBULANCES</span>
@@ -1119,7 +1100,7 @@ function App() {
                   <strong className="text-white text-lg mt-1 block">7 / 10 AVAIL</strong>
                 </div>
               </div>
-              
+
               <div className="text-[10px] text-gray-500 mt-4 text-center">
                 *Assets dynamically routed on scenario initialization via live coordinate logic
               </div>
@@ -1131,7 +1112,7 @@ function App() {
                 <span className="w-1.5 h-3 bg-amber-500 rounded-sm"></span>
                 <h3 className="text-xs uppercase font-bold text-gray-200 tracking-wider">🚨 Stakeholder Logs Panel</h3>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                 <AlertsPanel audience="ndma" />
                 <AlertsPanel audience="emergency_services" />
@@ -1150,7 +1131,7 @@ function App() {
                 </div>
                 <ResourcePanel />
               </div>
-              
+
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 px-1">
                   <span className="w-1.5 h-3 bg-emerald-500 rounded-sm"></span>
@@ -1183,7 +1164,7 @@ function App() {
                 <span className="w-1.5 h-4.5 bg-purple-500 rounded-sm"></span>
                 <h2 className="text-xs uppercase font-bold text-gray-300 tracking-widest font-mono">System Core Blueprint</h2>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 <div className="scale-100 origin-top">
                   <ArchEnginePanel />
@@ -1213,10 +1194,10 @@ function App() {
         {activeTab === 'map' && (
           <div className="h-[72vh] min-h-[520px] w-full relative border border-[#1f1f1f] rounded-lg overflow-hidden shadow-2xl animate-fade-in-up shrink-0">
             <MapCanvas />
-            
+
             {/* Floating Scenario Trigger overlay */}
             <div className="absolute top-4 right-4 z-10 flex flex-col items-end select-none">
-              <button 
+              <button
                 onClick={() => setIsScenarioDropdownOpen(!isScenarioDropdownOpen)}
                 className="px-4 py-2.5 bg-emerald-500/90 hover:bg-emerald-500 text-black border border-emerald-400 rounded-md text-[10px] font-extrabold tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-2 cursor-pointer active:scale-95 animate-pulse"
               >
@@ -1226,7 +1207,7 @@ function App() {
 
               {isScenarioDropdownOpen && (
                 <div className="mt-2 bg-[#0a0a0a]/95 backdrop-blur border border-[#1f1f1f] rounded shadow-2xl p-2.5 w-52 flex flex-col gap-2 animate-fade-in-down font-mono z-50">
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/pipeline/run');
                       setIsScenarioDropdownOpen(false);
@@ -1236,7 +1217,7 @@ function App() {
                   >
                     📡 RUN LIVE SCENARIO
                   </button>
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/demo/scenario-a-v2');
                       setIsScenarioDropdownOpen(false);
@@ -1246,7 +1227,7 @@ function App() {
                   >
                     🌊 SCRIPTED SCENARIO A
                   </button>
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/demo/scenario-b');
                       setIsScenarioDropdownOpen(false);
@@ -1256,7 +1237,7 @@ function App() {
                   >
                     ⚠️ SCRIPTED SCENARIO B
                   </button>
-                  <button 
+                  <button
                     onClick={() => {
                       triggerPipelineRun('/demo/scenario-c');
                       setIsScenarioDropdownOpen(false);
@@ -1271,7 +1252,7 @@ function App() {
             </div>
           </div>
         )}
-        
+
         {/* TAB 3: BROADCAST & NEWS LIVE DECK */}
         {activeTab === 'broadcasts' && (
           <div className="flex flex-col gap-3 animate-fade-in-up">
@@ -1279,7 +1260,7 @@ function App() {
               <span className="w-1.5 h-3 bg-red-500 rounded-sm"></span>
               <h2 className="text-xs uppercase font-bold text-gray-300 tracking-widest font-mono">Satellite News & Broadcast Linkage Deck</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {newsFeeds[0] && (
                 <div className="col-span-1 min-h-[300px]">
@@ -1313,7 +1294,7 @@ function App() {
               <span className="w-1.5 h-3 bg-amber-500 rounded-sm"></span>
               <h2 className="text-xs uppercase font-bold text-gray-300 tracking-widest font-mono">Dedicated Stakeholder Communication Centers</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               <AlertsPanel audience="ndma" />
               <AlertsPanel audience="emergency_services" />
@@ -1335,7 +1316,7 @@ function App() {
                 </div>
                 <ResourcePanel />
               </div>
-              
+
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 px-1">
                   <span className="w-1.5 h-3 bg-emerald-500 rounded-sm"></span>
@@ -1350,7 +1331,7 @@ function App() {
         {/* TAB 6: SETTINGS & SYSTEM LINKAGE */}
         {activeTab === 'settings' && (
           <div className="flex flex-col gap-8 w-full animate-fade-in-up font-mono">
-            
+
             {/* Why Amaan */}
             <div className="bg-[#070707] border border-[#1f1f1f] rounded p-6 shadow-xl w-full">
               <div className="flex items-center gap-2 border-b border-[#1a1a1a] pb-2.5 mb-4">
@@ -1360,21 +1341,21 @@ function App() {
 
               <div className="space-y-4 text-gray-300 text-xs leading-relaxed">
                 <p>
-                  Pakistan loses billions of rupees and hundreds of lives annually to preventable crisis mismanagement. 
-                  The historical <strong>Karachi & Islamabad Monsoon Floods</strong> resulted in massive casualties and structural damages — 
-                  not because the storms were unpredicted, but because response teams were completely 
+                  Pakistan loses billions of rupees and hundreds of lives annually to preventable crisis mismanagement.
+                  The historical <strong>Karachi & Islamabad Monsoon Floods</strong> resulted in massive casualties and structural damages —
+                  not because the storms were unpredicted, but because response teams were completely
                   <em> blind, reactive, and slow</em>.
                 </p>
-                
+
                 <p>
-                  Emergency services received information from disjointed, conflicting channels. Operations operators 
-                  had no intelligent central core to tell them where to deploy, which reports to trust, 
+                  Emergency services received information from disjointed, conflicting channels. Operations operators
+                  had no intelligent central core to tell them where to deploy, which reports to trust,
                   and how to coordinate limited resources between multiple concurrent emergencies.
                 </p>
 
                 <div className="border-l-2 border-amber-500 pl-3.5 py-1.5 text-gray-400 italic text-[11px] bg-amber-950/5">
-                  "Amaan isn't just a basic status dashboard that reports past catastrophes. Amaan is an autonomous 
-                  intelligence engine that decides optimal response vectors, predicted durations, and dispatch plans — 
+                  "Amaan isn't just a basic status dashboard that reports past catastrophes. Amaan is an autonomous
+                  intelligence engine that decides optimal response vectors, predicted durations, and dispatch plans —
                   resolving conflicting field pings in seconds."
                 </div>
               </div>
@@ -1394,8 +1375,8 @@ function App() {
               <div className="space-y-4">
                 <div>
                   <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Server API Base Address</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={serverUrlInput}
                     onChange={(e) => setServerUrlInput(e.target.value)}
                     placeholder="e.g. http://192.168.1.100:8080/api"
@@ -1407,7 +1388,7 @@ function App() {
                   <span>ACTIVE LINK: {getActiveServer()}</span>
                 </div>
 
-                <button 
+                <button
                   onClick={saveServerUrl}
                   className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-black border border-emerald-400 font-extrabold uppercase text-[10px] tracking-widest rounded transition-all cursor-pointer active:scale-95"
                 >
@@ -1422,7 +1403,7 @@ function App() {
                 )}
               </div>
             </div>
-            
+
           </div>
         )}
 
